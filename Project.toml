@@ -1,0 +1,11 @@
+name = "ElectricMachineWinch"
+uuid = "0c7c3992-6b03-4dd7-9ce6-b78056c4dd77"
+version = "0.1.0"
+authors = ["Generated bridge package for AWES electric-machine winch integration"]
+
+[deps]
+IM_AWES_bench = "d85c8359-f9b8-4611-8006-e67b7a824205"
+WinchModels = "7dcfa46b-7979-4771-bbf4-0aee0da42e1f"
+
+[compat]
+julia = "1.10"
