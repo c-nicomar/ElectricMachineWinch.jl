@@ -93,3 +93,54 @@ function WinchModels.calc_acceleration(
     # Machine angular acceleration -> reel-out linear acceleration.
     return R / n * dωm
 end
+
+"""
+    step_drive_from_kite!(wm, v_ro_set, v_ro_meas, tether_force; dt_outer)
+
+Update the electric drive/controller once from the KiteSimulators loop, but
+internally run the electrical/FOC model with its own smaller timestep `wm.Ts`.
+
+Returns the latest machine-side electromagnetic torque [Nm].
+"""
+function step_drive_from_kite!(
+    wm::DetailedIMWinch,
+    v_ro_set::Real,
+    v_ro_meas::Real,
+    tether_force::Real;
+    dt_outer::Real = wm.Ts,
+)
+    R = wm.drum_radius
+    n = wm.gear_ratio
+
+    dt_outer_f = Float64(dt_outer)
+
+    # Number of electric-drive updates during one kite macro-step.
+    n_sub = max(1, round(Int, dt_outer_f / wm.Ts))
+
+    # Adjust the internal step very slightly so the substeps exactly cover dt_outer.
+    Ts_eff = dt_outer_f / n_sub
+
+    last_out = DriveStepOutput()
+
+    for _ in 1:n_sub
+        # For the first implementation, hold kite-side variables constant
+        # during the macro-step.
+        ωm_ref = n / R * Float64(v_ro_set)
+        ωm     = n / R * Float64(v_ro_meas)
+        Tload  = R / n * Float64(tether_force)
+
+        last_out = drive_step!(
+            wm.controller,
+            wm.plant;
+            ωm_ref = ωm_ref,
+            ωm = ωm,
+            Tload = Tload,
+            Ts = Ts_eff,
+            plant_substeps = wm.plant_substeps,
+        )
+    end
+
+    _store_last_output!(wm, last_out)
+
+    return wm.Te
+end

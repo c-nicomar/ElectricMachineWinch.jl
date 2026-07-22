@@ -20,13 +20,13 @@ Base.@kwdef mutable struct IdealTorqueController <: AbstractIMDriveController
     Te::Float64 = 0.0
 
     # Speed PI gains. Start conservative.
-    Kp_speed::Float64 = 15.0
-    Ki_speed::Float64 = 5.0
+    Kp_speed::Float64 = 15
+    Ki_speed::Float64 = 2
     ui_speed::Float64 = 0.0
 
     # Torque actuator and limits.
     Te_max::Float64 = 124.0
-    Te_rate_max::Float64 = 2_000.0       # [Nm/s]
+    Te_rate_max::Float64 = 1000.0       # [Nm/s]
     tau_Te::Float64 = 20e-3              # [s]
 
     # Whether to cancel the tether/load torque in the speed controller.

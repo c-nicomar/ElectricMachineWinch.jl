@@ -22,6 +22,8 @@ function make_electric_winch(;
     Te_max::Float64 = 124.0,
     speed_ts_wm::Float64 = 0.5,
     use_load_feedforward::Bool = false,
+    use_field_weakening::Bool = false,
+    wm_base_fw::Float64 = 120.0,
 )
     c = if controller == :ideal
         IdealTorqueController(Te_max = Te_max)
@@ -33,6 +35,8 @@ function make_electric_winch(;
             Te_max = Te_max,
             speed_ts_wm = speed_ts_wm,
             use_load_feedforward = use_load_feedforward,
+            use_field_weakening = use_field_weakening,
+            wm_base_fw = wm_base_fw,
         )
     else
         error("Unknown controller = $controller. Use :ideal or :foc_speed_f1.")

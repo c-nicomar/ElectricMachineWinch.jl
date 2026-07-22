@@ -59,6 +59,8 @@ function make_default_foc_speed_controller(;
     wm_dot_max::Float64 = 100.0,
     Te_max::Float64 = 124.0419647,
     use_load_feedforward::Bool = false,
+    use_field_weakening::Bool = false,
+    wm_base_fw::Float64 = 120.0,
 )
     obs_p = IMB.RotorFluxObserverDiscreteParams(Ts = Ts)
 
@@ -71,6 +73,8 @@ function make_default_foc_speed_controller(;
         ts_wm = speed_ts_wm,
         ts_dist_wm = speed_ts_dist_wm,
         use_load_feedforward = use_load_feedforward,
+        use_field_weakening = use_field_weakening,
+        wm_base_fw = wm_base_fw,
     )
 
     current_p = IMB.CurrentControllerDiscreteParams(
@@ -125,6 +129,7 @@ function drive_step!(
         TL_est = Tload,
         reset = false,
     )
+  
 
     # 4. Inner current controller.
     ctrl = IMB.current_controller_step!(
