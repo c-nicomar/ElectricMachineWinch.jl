@@ -52,7 +52,7 @@ same default machine constants as your uploaded benchmark package.
 function make_default_foc_speed_controller(;
     Ts::Float64 = 100e-6,
     Vs_max::Float64 = 310.0,
-    Is_max::Float64 = 40.0,
+    Is_max::Float64 = 40.0*sqrt(2),
     speed_ts_wm::Float64 = 0.5,
     speed_tau_f_wm::Float64 = 10e-3,
     speed_ts_dist_wm::Float64 = 3.0,
