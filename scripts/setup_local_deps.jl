@@ -2,7 +2,7 @@
 #
 # Put ElectricMachineWinch.jl next to your local projects, for example:
 #
-#   JuliaModels/
+#   repos/
 #     ElectricMachineWinch.jl/
 #     IM_AWES_bench/
 #     WinchModels.jl/
