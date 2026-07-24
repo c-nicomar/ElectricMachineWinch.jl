@@ -16,6 +16,8 @@ export make_default_foc_speed_controller
 export make_electric_winch
 export reset!
 export last_summary
+export FOCSpeedMTPAController
+export make_default_foc_speed_mtpa_controller
 
 include("types.jl")
 include("plant_steps.jl")
@@ -23,5 +25,6 @@ include("controllers/ideal_torque.jl")
 include("controllers/foc_speed_f1.jl")
 include("winch_interface.jl")
 include("constructors.jl")
+include("controllers/foc_speed_mtpa.jl")
 
 end # module
