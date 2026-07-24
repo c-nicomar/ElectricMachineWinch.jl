@@ -16,7 +16,7 @@ using Pkg
 
 root = normpath(joinpath(@__DIR__, "..", ".."))
 
-im_path = joinpath(root, "IM_AWES_bench.jl")
+im_path = joinpath(root, "IM_AWES_bench")
 winch_path = joinpath(root, "WinchModels.jl")
 
 if !isdir(im_path)
