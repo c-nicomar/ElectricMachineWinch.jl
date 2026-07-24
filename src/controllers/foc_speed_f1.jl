@@ -29,7 +29,9 @@ function FOCSpeedF1Controller(;
     return FOCSpeedF1Controller(
         IMB.RotorFluxObserverDiscreteState(),
         obs_p,
-        IMB.OuterSpeedFluxF1State(),
+        IMB.OuterSpeedFluxF1State(
+            id_ref_ant = outer_p.isd_nom,
+        ),
         outer_p,
         IMB.CurrentControllerDiscreteState(),
         current_p,
@@ -38,7 +40,9 @@ end
 
 function reset!(c::FOCSpeedF1Controller)
     c.obs_state = IMB.RotorFluxObserverDiscreteState()
-    c.outer_state = IMB.OuterSpeedFluxF1State()
+    c.outer_state = IMB.OuterSpeedFluxF1State(
+        id_ref_ant = c.outer_p.isd_nom,
+    )
     c.current_state = IMB.CurrentControllerDiscreteState()
     return nothing
 end

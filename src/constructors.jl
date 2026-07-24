@@ -69,6 +69,18 @@ function make_electric_winch(;
     id_dot_max::Float64 = 600.0,
     lambda_rd_floor::Float64 = 0.35,
     Te_reserve::Float64 = 45.0,
+
+    # Optional explicit IM_AWES_bench parameter objects.
+    #
+    # When all three F1 controller parameter objects are supplied, the
+    # constructor uses them directly instead of the small-machine defaults.
+    #
+    # `plant_p` is independent from the controller parameter objects so that
+    # plant/controller mismatch and robustness studies remain possible.
+    plant_p::Union{Nothing,IMB.IMPlantParams} = nothing,
+    obs_p::Union{Nothing,IMB.RotorFluxObserverDiscreteParams} = nothing,
+    outer_f1_p::Union{Nothing,IMB.OuterSpeedFluxF1Params} = nothing,
+    current_p::Union{Nothing,IMB.CurrentControllerDiscreteParams} = nothing,
 )
     # ------------------------------------------------------------
     # Basic winch-level validation
@@ -101,6 +113,54 @@ function make_electric_winch(;
         throw(ArgumentError("Te_max must be positive."))
 
     # ------------------------------------------------------------
+    # Validate explicit F1 parameter selection.
+    #
+    # Custom F1 configuration is all-or-nothing. This prevents accidentally
+    # combining a new-machine observer with the default small-machine outer
+    # or current controller.
+    # ------------------------------------------------------------
+    has_custom_f1 =
+        obs_p !== nothing ||
+        outer_f1_p !== nothing ||
+        current_p !== nothing
+
+    missing_custom_f1 =
+        obs_p === nothing ||
+        outer_f1_p === nothing ||
+        current_p === nothing
+
+    if controller != :foc_speed_f1 && has_custom_f1
+        throw(ArgumentError(
+            "obs_p, outer_f1_p, and current_p are only valid when " *
+            "controller = :foc_speed_f1.",
+        ))
+    end
+
+    if controller == :foc_speed_f1 && has_custom_f1 && missing_custom_f1
+        throw(ArgumentError(
+            "Custom F1 configuration requires all three parameter objects: " *
+            "obs_p, outer_f1_p, and current_p.",
+        ))
+    end
+
+    if controller == :foc_speed_f1 && has_custom_f1
+        isapprox(obs_p.Ts, Ts; rtol = 1e-12, atol = 0.0) ||
+            throw(ArgumentError(
+                "obs_p.Ts ($(obs_p.Ts)) must match winch Ts ($Ts).",
+            ))
+
+        isapprox(outer_f1_p.Ts, Ts; rtol = 1e-12, atol = 0.0) ||
+            throw(ArgumentError(
+                "outer_f1_p.Ts ($(outer_f1_p.Ts)) must match winch Ts ($Ts).",
+            ))
+
+        isapprox(current_p.Ts, Ts; rtol = 1e-12, atol = 0.0) ||
+            throw(ArgumentError(
+                "current_p.Ts ($(current_p.Ts)) must match winch Ts ($Ts).",
+            ))
+    end
+
+    # ------------------------------------------------------------
     # Select and construct the drive controller
     # ------------------------------------------------------------
     c = if controller == :ideal
@@ -109,18 +169,26 @@ function make_electric_winch(;
         )
 
     elseif controller == :foc_speed_f1
-        make_default_foc_speed_controller(
-            Ts = Ts,
-            Vs_max = Vs_max,
-            Is_max = Is_max,
-            Te_max = Te_max,
+        if has_custom_f1
+            FOCSpeedF1Controller(
+                obs_p = obs_p,
+                outer_p = outer_f1_p,
+                current_p = current_p,
+            )
+        else
+            make_default_foc_speed_controller(
+                Ts = Ts,
+                Vs_max = Vs_max,
+                Is_max = Is_max,
+                Te_max = Te_max,
 
-            speed_ts_wm = speed_ts_wm,
-            use_load_feedforward = use_load_feedforward,
+                speed_ts_wm = speed_ts_wm,
+                use_load_feedforward = use_load_feedforward,
 
-            use_field_weakening = use_field_weakening,
-            wm_base_fw = wm_base_fw,
-        )
+                use_field_weakening = use_field_weakening,
+                wm_base_fw = wm_base_fw,
+            )
+        end
 
     elseif controller == :foc_speed_mtpa
         make_default_foc_speed_mtpa_controller(
@@ -168,10 +236,14 @@ function make_electric_winch(;
     # operation, but these values are retained in the plant parameter
     # structure for consistency and standalone use.
     # ------------------------------------------------------------
-    plant_p = IMB.IMPlantParams(
-        J = J_eq,
-        B = B_eq,
-    )
+    selected_plant_p = if plant_p === nothing
+        IMB.IMPlantParams(
+            J = J_eq,
+            B = B_eq,
+        )
+    else
+        plant_p
+    end
 
     return DetailedIMWinch(
         drum_radius = drum_radius,
@@ -185,7 +257,7 @@ function make_electric_winch(;
 
         controller = c,
         plant = InductionMachinePlant(
-            p = plant_p,
+            p = selected_plant_p,
         ),
     )
 end
