@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Start Julia in this package's environment (the repo-root project).
+#
+#   bin/run_julia                       interactive REPL (Revise loaded if available)
+#   bin/run_julia test/foo.jl [...]     run a script; extra args are forwarded to it
+#
+# Works whether called from the repo root or from bin/.
+
+if [[ $(basename "$(pwd)") == "bin" ]]; then
+    cd ..
+fi
+
+script_file=""
+if [[ $# -gt 0 ]]; then
+    script_file="$1"
+    shift
+    if [[ ! -f "$script_file" ]]; then
+        echo "Error: script file '$script_file' not found."
+        exit 1
+    fi
+fi
+
+if [[ -n "$script_file" ]]; then
+    julia --project -t auto "$script_file" "$@"
+else
+    julia --project -t auto -i -e \
+        'try; @eval using Revise; catch; @info "Revise not available; continuing without it"; end'
+fi
