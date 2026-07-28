@@ -1,7 +1,3 @@
-# Lightweight package smoke test.
-# This is intentionally minimal because the real package depends on local
-# development paths for WinchModels and IM_AWES_bench.
-
 using Test
 using ElectricMachineWinch
 using WinchModels
@@ -13,3 +9,7 @@ using WinchModels
     @test isfinite(wm.Te)
     @test wm.n_acceleration_calls == 1
 end
+
+include("test_ideal_torque.jl")
+include("test_foc_speed_f1.jl")
+nothing
