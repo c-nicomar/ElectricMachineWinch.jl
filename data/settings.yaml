@@ -106,15 +106,16 @@ winch:
     max_force: 4000        # maximal (nominal) tether force; short overload allowed [N]
     v_ro_max:  8.0         # maximal reel-out speed                          [m/s]
     v_ro_min: -8.0         # minimal reel-out speed (=max reel-in speed)     [m/s]
-    drum_radius: 0.2    # radius of the drum                              [m]
-    gear_ratio: 4.26        # gear ratio of the winch                         [-]   
+    drum_radius: 0.2       # radius of the drum                              [m]
+    gear_ratio: 4.26       # gear ratio of the winch                         [-]   
     inertia_total: 0.204   # total inertia, as seen from the motor/generator [kgm²]
     f_coulomb: 122.0       # coulomb friction                                [N]
     c_vf: 30.6             # coefficient for the viscous friction            [Ns/m]
 
 environment:
-    v_wind: 6             # wind speed at reference height          [m/s]
-    v_wind_ref: [6, 0.0]  # wind speed vector at reference height   [m/s]
+    v_wind: 6                # wind speed at reference height          [m/s]
+    use_wind_vec: false      # if true, the wind vector is used instead of a scalar wind speed
+    v_wind_ref: [6, 0.0]     # wind speed vector at reference height   [m/s]
     temp_ref: 15.0           # temperature at reference height         [°C]
     height_gnd: 0.0          # height of groundstation above see level [m]
     h_ref:  6.0              # reference height for the wind speed     [m]
