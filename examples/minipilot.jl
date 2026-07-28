@@ -9,7 +9,7 @@ using Timers; tic()
 using KiteControllers, KiteModels, KiteViewers, Statistics, ElectricMachineWinch
 using KiteUtils: Settings, load_settings
 
-set::Settings = deepcopy(load_settings("system.yaml"))
+set::Settings = deepcopy(load_settings("system.yml"))
 default_turbulence = get_default_turbulence()
 if default_turbulence !== nothing
     set.use_turbulence = default_turbulence
