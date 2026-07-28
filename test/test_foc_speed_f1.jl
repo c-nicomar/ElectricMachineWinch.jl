@@ -3,6 +3,11 @@
 # Checks the coupling:
 #   set_speed -> FOC speed loop -> current controller -> electrical IM -> Te -> acceleration
 
+using Pkg
+if Base.active_project() != joinpath(@__DIR__, "Project.toml")
+    Pkg.activate(joinpath(@__DIR__))
+end
+
 using Test
 using ElectricMachineWinch
 using WinchModels

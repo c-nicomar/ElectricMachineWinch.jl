@@ -7,6 +7,11 @@ using Test
 using ElectricMachineWinch
 using WinchModels
 
+using Pkg
+if Base.active_project() != joinpath(@__DIR__, "Project.toml")
+    Pkg.activate(joinpath(@__DIR__))
+end
+
 @testset "IdealTorqueController winch coupling" begin
     wm = make_electric_winch(
         controller = :ideal,
