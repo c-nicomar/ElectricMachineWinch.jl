@@ -6,7 +6,7 @@ if ! ("KiteViewers" ∈ keys(Pkg.project().dependencies))
 end
 using Timers; tic()
 
-using KiteControllers, KiteModels, KiteViewers, Statistics
+using KiteControllers, KiteModels, KiteViewers, Statistics, ElectricMachineWinch
 using KiteUtils: Settings, load_settings
 
 set::Settings = deepcopy(load_settings("system.yaml"))
@@ -30,6 +30,35 @@ function init_globals(kcu, wcs, fcs, fpps)
     global kps4, ssc
     kcu   = KCU(set)
     kps4 = KPS4(kcu)
+
+    # First integration test: simple ideal torque controller
+    kps4.wm = make_electric_winch(
+        controller = :ideal,
+        drum_radius = 0.5,
+        gear_ratio = 10.0,
+        J_eq = 0.3685,
+        B_eq = 0.01298,
+        Ts = wcs.dt,        # easiest first test: same sample time as autopilot
+        Te_max = 124.0,
+    )
+
+    # Second test: full FOC speed controller + IM electrical plant
+    #
+    # kps4.wm = make_electric_winch(
+    #     controller = :foc_speed_f1,
+    #     drum_radius = 0.5,
+    #     gear_ratio = 10.0,
+    #     J_eq = 0.3685,
+    #     B_eq = 0.01298,
+    #     Ts = 100e-6,
+    #     plant_substeps = 1,
+    #     Vs_max = 310.0,
+    #     Is_max = 40.0,
+    #     Te_max = 124.0,
+    #     speed_ts_wm = 0.5,
+    #     use_load_feedforward = false,
+    # )
+
     wcs  = WCSettings(true, dt = 1/set.sample_freq)
     fcs  = FPCSettings(true, dt=wcs.dt)
     fpps = FPPSettings(true)
