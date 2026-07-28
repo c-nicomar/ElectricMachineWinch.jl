@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Switch IM_AWES_bench back from a local `Pkg.develop` to the [sources] git URL.
+#
+#   bin/free
+#
+# Uncomments the "IM_AWES_bench = {url = ..., rev = ...}" line under
+# [sources] in Project.toml, then Pkg.free's IM_AWES_bench (dropping the
+# local develop path) and resolves against that source again. Counterpart
+# to bin/dev.
+#
+# Works whether called from the repo root or from bin/.
+
+set -euo pipefail
+
+if [[ $(basename "$(pwd)") == "bin" ]]; then
+    cd ..
+fi
+
+awk '
+    /^\[sources\]/ { in_sources = 1 }
+    /^\[/ && !/^\[sources\]/ { in_sources = 0 }
+    in_sources && /^#[[:space:]]*IM_AWES_bench[[:space:]]*=/ { sub(/^#[[:space:]]*/, ""); print; next }
+    { print }
+' Project.toml > Project.toml.tmp && mv Project.toml.tmp Project.toml
+
+julia --project -e 'using Pkg; Pkg.free("IM_AWES_bench"); Pkg.resolve()'
