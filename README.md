@@ -2,14 +2,7 @@
 
 `ElectricMachineWinch.jl` is a bridge package for testing detailed induction-machine electric drives as winch models in the KiteSimulators/KiteModels ecosystem.
 
-The package does **not** replace:
-
-- [`KiteSimulators.jl`](https://github.com/aenarete/KiteSimulators.jl)
-- `KiteModels`
-- [`WinchModels.jl`](https://github.com/aenarete/WinchModels.jl)
-- [`IM_AWES_bench.jl`](https://github.com/c-nicomar/IM_AWES_bench.jl)
-
-Instead, it provides a winch type compatible with `WinchModels`:
+The package provides a winch type compatible with `WinchModels`:
 
 ```julia
 DetailedIMWinch <: WinchModels.AbstractWinchModel
@@ -54,7 +47,7 @@ Only the electrical machine states are integrated internally. This avoids introd
 ## Architecture
 
 ```text
-KiteSimulators autopilot
+KiteControllers autopilot
         │
         │ reel-out speed reference
         ▼
@@ -243,8 +236,6 @@ ElectricMachineWinch.jl/
 │   └── GETTING_STARTED.md
 ├── examples/
 │   └── autopilot_im_winch_patch.jl
-├── scripts/
-│   └── setup_local_deps.jl
 ├── src/
 │   ├── ElectricMachineWinch.jl
 │   ├── types.jl
@@ -265,7 +256,7 @@ ElectricMachineWinch.jl/
 
 ## Requirements
 
-The package currently targets Julia 1.10 and depends on:
+The package currently targets Julia 1.12 and depends on:
 
 - `IM_AWES_bench`
 - `WinchModels`
@@ -281,31 +272,9 @@ JuliaModels/
 └── AWES_IM_KiteSimulators_reproducibility.jl/
 ```
 
-The exact parent-folder name is not important, but the provided setup script expects the repositories to be sibling folders.
-
 ---
 
 ## Local setup
-
-From the `ElectricMachineWinch.jl` repository:
-
-```bash
-julia --project=. scripts/setup_local_deps.jl
-```
-
-The script develops the local copies of `IM_AWES_bench.jl` and `WinchModels.jl`, instantiates the environment, and precompiles it.
-
-You can also configure the environment manually:
-
-```julia
-using Pkg
-
-Pkg.activate("path/to/ElectricMachineWinch.jl")
-Pkg.develop(path = "path/to/IM_AWES_bench.jl")
-Pkg.develop(path = "path/to/WinchModels.jl")
-Pkg.instantiate()
-Pkg.precompile()
-```
 
 Check that the package loads:
 
@@ -439,7 +408,7 @@ This keeps the speed-loop tuning and the inertia/friction feedforward consistent
 
 ---
 
-## KiteSimulators integration
+## KiteControllers integration
 
 Add the local packages to the KiteSimulators environment:
 
@@ -685,4 +654,4 @@ Then:
 3. add a standalone test;
 4. use the new controller symbol in `make_electric_winch`.
 
-The rest of the KiteSimulators integration can remain unchanged.
+The rest of the KiteControllers integration can remain unchanged.
