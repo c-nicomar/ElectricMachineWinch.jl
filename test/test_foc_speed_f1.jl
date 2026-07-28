@@ -53,3 +53,4 @@ using WinchModels
 
     @test wm.n_acceleration_calls == 500_000
 end
+nothing

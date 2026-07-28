@@ -47,3 +47,4 @@ end
 
     @test wm.n_acceleration_calls == 20_000
 end
+nothing
