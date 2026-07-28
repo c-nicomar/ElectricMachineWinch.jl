@@ -56,6 +56,7 @@ same default machine constants as your uploaded benchmark package.
 function make_default_foc_speed_controller(;
     Ts::Float64 = 100e-6,
     Vs_max::Float64 = 310.0,
+    Lss::Float64 = 45.12e-3,
     Is_max::Float64 = 40.0*sqrt(2),
     speed_ts_wm::Float64 = 0.5,
     speed_tau_f_wm::Float64 = 10e-3,
@@ -70,6 +71,8 @@ function make_default_foc_speed_controller(;
 
     outer_p = IMB.OuterSpeedFluxF1Params(
         Ts = Ts,
+        Lss = Lss,
+        Vs_max = Vs_max,
         Is_max = Is_max,
         Te_max = Te_max,
         wm_dot_max = wm_dot_max,
@@ -130,6 +133,7 @@ function drive_step!(
         c.outer_p;
         wm_ref = ωm_ref,
         wm_med = ωm,
+        omega_e = obs.omega_e,
         TL_est = Tload,
         reset = false,
     )
