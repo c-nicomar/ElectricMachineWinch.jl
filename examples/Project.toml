@@ -4,6 +4,9 @@ KiteControllers = "b19fd437-5b3a-4cca-b199-c3ded0f20ded"
 KiteModels = "b94af626-7959-4878-9336-2adc27959007"
 KiteUtils = "90980105-b163-44e5-ba9f-8b1c83bb0533"
 KiteViewers = "2e593061-95e7-45e4-95f4-df0491f2e601"
+LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
+MakieControlPlots = "6d616b69-6563-4f6e-8472-6f6c706c6f74"
+NativeFileDialog = "e1fe445b-aa65-4df4-81c1-2041507f0fd4"
 
 [sources]
 ElectricMachineWinch = {path = ".."}
