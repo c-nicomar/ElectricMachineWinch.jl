@@ -8,5 +8,6 @@ IM_AWES_bench = "d85c8359-f9b8-4611-8006-e67b7a824205"
 WinchModels = "7dcfa46b-7979-4771-bbf4-0aee0da42e1f"
 
 [compat]
+IM_AWES_bench = "1.0.0"
 WinchModels = "0.3.9"
 julia = "1.10"
