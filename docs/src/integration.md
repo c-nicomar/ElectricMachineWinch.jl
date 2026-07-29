@@ -18,7 +18,7 @@ There are two ways into KiteModels, and they are not equivalent.
 
 ### 1. `step_drive_from_kite!` — preferred
 
-Update the electric drive exactly once per KiteSimulators macro-step:
+Update the electric drive exactly once per KiteControllers macro-step:
 
 ```julia
 Te_cmd = ElectricMachineWinch.step_drive_from_kite!(
@@ -42,7 +42,7 @@ KiteModels.next_step!(
 ```
 
 [`step_drive_from_kite!`](@ref) internally executes `round(Int, dt_outer/wm.Ts)`
-electrical/controller substeps to cover the KiteSimulators macro-step, holding
+electrical/controller substeps to cover the KiteControllers macro-step, holding
 the kite-side variables constant during that macro-step.
 
 Choose `dt_outer` so that `dt_outer / wm.Ts` is an integer, or extremely close
@@ -65,9 +65,9 @@ residual evaluation would produce a nonphysical number of controller updates.
 read-only companion to `step_drive_from_kite!`: it applies the given torque and
 returns the resulting reel-out acceleration without stepping the controller.
 
-## Adding the winch to a KiteSimulators project
+## Adding the winch to a KiteControllers project
 
-In your `KiteSimulators.jl` project, add the bridge package to the environment:
+In your `KiteControllers.jl` project, add the bridge package to the environment:
 
 ```julia
 using Pkg
