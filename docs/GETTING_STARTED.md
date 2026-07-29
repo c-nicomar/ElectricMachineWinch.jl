@@ -1,14 +1,13 @@
 # Getting started with `ElectricMachineWinch.jl`
 
-This document explains exactly what the generated bridge package does and how to
-start testing it.
+This document explains what the bridge package does and how to start testing it.
 
 ---
 
 ## 1. Why this package exists
 
-`KiteSimulators.jl` should remain mostly untouched. The clean way to include your
-electric machine model is to provide a new object that behaves like a
+`KiteSimulators.jl` should remain mostly untouched. The clean way to include a
+detailed electric machine model is to provide a new object that behaves like a
 `WinchModels` winch.
 
 KiteModels internally asks the winch model for acceleration:
@@ -29,55 +28,74 @@ and implements:
 WinchModels.calc_acceleration(wm::DetailedIMWinch, ...)
 ```
 
-This lets KiteModels call your winch with no change to the autopilot logic.
+It also provides `step_drive_from_kite!`, which is the preferred entry point for the
+detailed discrete controllers (see section 7).
 
 ---
 
-## 2. Recommended folder layout
+## 2. Requirements and folder layout
 
-Place the folder next to your local projects:
+The package targets Julia 1.12 and depends on `IM_AWES_bench` and `WinchModels`.
+
+`IM_AWES_bench` is resolved from the git URL declared in `[sources]` in
+`Project.toml`, so no manual setup is needed for a plain checkout. If you also want to
+edit `IM_AWES_bench` locally, place the projects side by side:
 
 ```text
 JuliaModels/
-├── KiteSimulators.jl/
+├── ElectricMachineWinch.jl/
+├── IM_AWES_bench.jl/
 ├── WinchModels.jl/
-├── IM_AWES_bench/
-└── ElectricMachineWinch.jl/
+└── KiteSimulators.jl/
 ```
-
-The setup script assumes this layout.
 
 ---
 
-## 3. Configure local dependencies
+## 3. Configure dependencies
 
-Open a terminal in `ElectricMachineWinch.jl` and run:
+Default (git source) setup:
 
 ```bash
-julia --project=. scripts/setup_local_deps.jl
+julia --project -e 'using Pkg; Pkg.instantiate()'
 ```
 
-This does:
+To switch `IM_AWES_bench` to the local sibling checkout `../IM_AWES_bench`:
 
-```julia
-Pkg.develop(path="../IM_AWES_bench")
-Pkg.develop(path="../WinchModels.jl")
+```bash
+bin/dev
 ```
 
-After this, the package should be able to load:
+To switch back to the git source:
+
+```bash
+bin/free
+```
+
+Both scripts edit the `[sources]` section of `Project.toml` in place, so that file
+will show as modified afterwards.
+
+Check that the package loads:
 
 ```julia
 using ElectricMachineWinch
 ```
 
+`bin/run_julia` starts a REPL in this project with `Revise` loaded if available.
+Revise does not track changes to struct definitions, module includes, or exports, so
+restart Julia after changing those.
+
 ---
 
 ## 4. First standalone test: ideal torque controller
 
-Run:
-
 ```bash
-julia --project=. test/manual_test_ideal_torque.jl
+julia --project=test test/test_ideal_torque.jl
+```
+
+or, in a running REPL:
+
+```julia
+include("test/test_ideal_torque.jl")
 ```
 
 This test does not use KiteSimulators. It checks only:
@@ -86,18 +104,8 @@ This test does not use KiteSimulators. It checks only:
 v_set -> speed PI -> torque actuator -> winch acceleration -> v_reelout
 ```
 
-You should see printed values similar to:
-
-```text
-t=0.1  v=...  a=...  Te=...  Te_ref=...  sat=false
-```
-
-The important thing is not the exact number. The important thing is:
-
-- the script runs without errors;
-- the speed remains finite;
-- torque remains finite;
-- acceleration remains finite.
+The important thing is not the exact numbers, but that the script runs without
+errors and that speed, torque, and acceleration stay finite.
 
 If this fails, debug the bridge package before connecting KiteSimulators.
 
@@ -105,38 +113,42 @@ If this fails, debug the bridge package before connecting KiteSimulators.
 
 ## 5. Second standalone test: full FOC speed controller
 
-Run:
-
 ```bash
-julia --project=. test/manual_test_foc_speed_f1.jl
+julia --project=test test/test_foc_speed_f1.jl
 ```
 
 This checks:
 
 ```text
 v_set
+  -> rotor-flux observer
   -> FOC outer speed/flux controller
   -> current controller
-  -> alpha-beta voltage
-  -> IM electrical plant
+  -> inverse Park -> alpha-beta voltage
+  -> electrical-only IM RK4 plant
   -> electromagnetic torque
   -> winch acceleration
 ```
 
-This is the first test involving your detailed `IM_AWES_bench` model.
+This is the first test involving the detailed `IM_AWES_bench` model.
 
-If the speed goes the wrong way, check sign conventions first. The current sign
-convention is:
+Run the whole suite with:
+
+```bash
+julia --project=test test/runtests.jl
+```
+
+If the speed goes the wrong way, check sign conventions first. The convention is:
 
 ```text
-J*dω = Te + Tload - B*ω
+J*dωm/dt = Te + Tload - B*ωm
 ```
 
 where:
 
 ```julia
 Tload = drum_radius / gear_ratio * tether_force
-ωm = gear_ratio / drum_radius * v_reelout
+ωm    = gear_ratio / drum_radius * v_reelout
 ```
 
 During positive-speed generation, you usually expect:
@@ -149,7 +161,29 @@ Te < 0
 
 ---
 
-## 6. Connecting to KiteSimulators autopilot
+## 6. Constructing a winch
+
+`make_electric_winch` selects the controller and builds a coherent set of
+`IM_AWES_bench` parameter objects:
+
+```julia
+wm = make_electric_winch(
+    controller = :ideal,
+    drum_radius = 0.5,
+    gear_ratio = 10.0,
+    J_eq = 0.3685,
+    B_eq = 0.01298,
+    Ts = 1e-3,
+    Te_max = 124.0,
+)
+```
+
+Available controllers are `:ideal`, `:foc_speed_f1`, and `:foc_speed_mtpa`. See the
+README for the full parameter sets of the two FOC variants.
+
+---
+
+## 7. Connecting to KiteSimulators autopilot
 
 In your `KiteSimulators.jl` project, add the bridge package to the environment:
 
@@ -157,8 +191,6 @@ In your `KiteSimulators.jl` project, add the bridge package to the environment:
 using Pkg
 Pkg.activate(".")
 Pkg.develop(path="../ElectricMachineWinch.jl")
-Pkg.develop(path="../IM_AWES_bench")
-Pkg.develop(path="../WinchModels.jl")
 Pkg.instantiate()
 ```
 
@@ -168,19 +200,14 @@ Then copy the original autopilot example:
 examples/autopilot.jl -> examples/autopilot_im_winch.jl
 ```
 
-Add near the top:
+and add near the top:
 
 ```julia
 using ElectricMachineWinch
 ```
 
-Find:
-
-```julia
-app.kps4 = KPS4(app.kcu)
-```
-
-Immediately after it, insert first the simple test winch:
+Immediately after `app.kps4 = KPS4(app.kcu)`, insert the winch. Start with the simple
+ideal-torque controller:
 
 ```julia
 app.kps4.wm = make_electric_winch(
@@ -194,76 +221,136 @@ app.kps4.wm = make_electric_winch(
 )
 ```
 
-Run:
-
-```julia
-include("examples/autopilot_im_winch.jl")
-```
-
-Only after the ideal torque controller works should you switch to the FOC model:
+Only after that works, switch to the FOC model:
 
 ```julia
 app.kps4.wm = make_electric_winch(
     controller = :foc_speed_f1,
-    drum_radius = 0.5,
-    gear_ratio = 10.0,
-    J_eq = 0.3685,
-    B_eq = 0.01298,
-    Ts = 100e-6,
+    drum_radius = 0.2,
+    gear_ratio = 4.26,
+    J_eq = 0.204,
+    B_eq = 0.0804,
+    Ts = 1e-4,
     plant_substeps = 1,
     Vs_max = 310.0,
-    Is_max = 40.0,
+    Is_max = 40.0 * sqrt(2),
     Te_max = 124.0,
-    speed_ts_wm = 0.5,
-    use_load_feedforward = false,
+    speed_ts_wm = 1.0,
+    use_load_feedforward = true,
+    use_field_weakening = true,
+    wm_base_fw = 120.0,
 )
+```
+
+### Stepping the drive
+
+Update the electric drive exactly once per KiteSimulators macro-step, then hand the
+resulting torque to the mechanical update:
+
+```julia
+Te_cmd = ElectricMachineWinch.step_drive_from_kite!(
+    app.kps4.wm,
+    v_ro_set,
+    v_ro_meas,
+    F_tether;
+    dt_outer = app.dt,
+)
+
+KiteModels.next_step!(app.kps4, integrator; set_torque = Te_cmd, dt = app.dt)
+```
+
+`step_drive_from_kite!` runs enough electrical/controller substeps to cover the
+macro-step, holding the kite-side variables constant during it. Choose `dt_outer` so
+that `dt_outer / wm.Ts` is an integer (or very close to one); otherwise the effective
+sample time drifts away from the `Ts` stored in the observer and controller parameter
+objects.
+
+This pattern is required for detailed stateful controllers because a DAE solver may
+evaluate the mechanical residual more than once per macro-step. Advancing the
+discrete observer/controller states inside every residual evaluation would produce a
+nonphysical number of controller updates. `wm.n_acceleration_calls` counts the calls
+so this is easy to detect.
+
+The direct `WinchModels.calc_acceleration(...; set_speed = ...)` path, which steps the
+drive inside the call, remains available for simple integration tests and
+compatibility.
+
+### Working examples
+
+- `examples/autopilot_im_winch_FOC_F1.jl` — a complete autopilot script using the F1
+  controller, including debug logging and CSV export of the drive signals.
+- `examples/autopilot_im_winch_patch.jl` — not runnable on its own; it is the minimal
+  patch to apply to a fresh copy of the upstream autopilot example.
+
+---
+
+## 8. What each source file does
+
+### `src/types.jl`
+
+Defines the core objects and thereby the architecture:
+
+- `DriveStepOutput` — the common return value of every controller
+- `InductionMachinePlant` — electrical plant parameters and state
+- `AbstractIMDriveController` — the controller interface
+- `DetailedIMWinch` — the `WinchModels`-compatible winch, plus `reset!` and
+  `last_summary`
+
+### `src/plant_steps.jl`
+
+The electrical-only induction-machine RK4 step. It uses the same alpha-beta
+electrical equations as the benchmark, but does not let the IM plant integrate its
+own mechanical speed — KiteModels already owns the reel-out speed state. Also
+contains `im_torque`, `inverse_park_voltage`, and `phase_power_alpha_beta`.
+
+### `src/controllers/ideal_torque.jl`
+
+Speed PI plus a first-order torque actuator with rate and magnitude limits. No
+electrical plant. Used to debug the KiteSimulators coupling before adding the machine
+model.
+
+### `src/controllers/foc_speed_f1.jl`
+
+Adapter around the validated FOC speed/flux F1 blocks from `IM_AWES_bench`. Supports
+field weakening.
+
+### `src/controllers/foc_speed_mtpa.jl`
+
+Adapter around the constrained-MTPA outer speed controller from `IM_AWES_bench`. The
+full outer-loop output is retained in `wm.controller.last_outer` for diagnostics
+(`isd_mtpa`, `isd_floor`, `isd_reserve`, `Te_current_limited`, ...).
+
+### `src/winch_interface.jl`
+
+`WinchModels.calc_acceleration` for `DetailedIMWinch`, and `step_drive_from_kite!`.
+
+### `src/constructors.jl`
+
+`make_electric_winch(...)`, which selects the controller and validates the
+configuration.
+
+---
+
+## 9. Logging and diagnostics
+
+The latest controller-agnostic values are stored on the winch itself:
+
+```julia
+wm.Te, wm.Te_ref
+wm.isd_ref, wm.isq_ref, wm.isd, wm.isq
+wm.vsd, wm.vsq, wm.vsα, wm.vsβ
+wm.Pelec, wm.Pmech, wm.saturated
+```
+
+A compact NamedTuple is available with:
+
+```julia
+last_summary(wm)
 ```
 
 ---
 
-## 7. What each source file does
-
-### `src/types.jl`
-
-Defines the core objects:
-
-- `DriveStepOutput`
-- `InductionMachinePlant`
-- `AbstractIMDriveController`
-- `DetailedIMWinch`
-
-This file sets the architecture.
-
-### `src/plant_steps.jl`
-
-Defines the electrical-only induction-machine RK4 step. It uses the same alpha-beta
-electrical equations as your benchmark, but does not let the IM plant integrate
-its own mechanical speed.
-
-This is important because KiteModels already owns the reel-out speed state.
-
-### `src/controllers/ideal_torque.jl`
-
-Simple controller for debugging the KiteSimulators coupling before using the full
-machine model.
-
-### `src/controllers/foc_speed_f1.jl`
-
-The real controller wrapper around your validated blocks from `IM_AWES_bench`.
-
-### `src/winch_interface.jl`
-
-Defines `WinchModels.calc_acceleration` for `DetailedIMWinch`. This is the actual
-interface used by KiteModels.
-
-### `src/constructors.jl`
-
-Convenience constructor `make_electric_winch(...)` to quickly create either the
-ideal-torque winch or the FOC-speed-F1 winch.
-
----
-
-## 8. How to test different machine controllers later
+## 10. Adding another controller
 
 Do not modify KiteSimulators. Add a new controller type:
 
@@ -273,7 +360,7 @@ mutable struct MyNewController <: AbstractIMDriveController
 end
 ```
 
-Then implement:
+Implement:
 
 ```julia
 function drive_step!(
@@ -290,24 +377,20 @@ function drive_step!(
 end
 ```
 
-Then use:
-
-```julia
-wm = DetailedIMWinch(controller = MyNewController(...))
-```
-
-or extend `make_electric_winch(...)` with a new controller symbol.
+Then include and export it in `src/ElectricMachineWinch.jl`, add a selector branch in
+`src/constructors.jl`, and add a test file modeled on `test/test_foc_speed_f1.jl`.
+The rest of the KiteControllers integration stays unchanged.
 
 ---
 
-## 9. Current limitation
+## 11. Current limitations
 
-The first integration version updates the electric drive inside
-`calc_acceleration`. This is the easiest way to connect to KiteModels without
-changing the autopilot structure.
-
-However, DAE solvers can call `calc_acceleration` more than once per macro step.
-So treat this version as the practical first integration/debugging version.
-
-The later research-grade version should update the electric drive once per
-simulator sample and make `calc_acceleration` mostly read-only.
+- The MTPA controller does not implement field weakening yet, so
+  `use_field_weakening` and `wm_base_fw` apply only to `:foc_speed_f1`. A full-speed
+  comparison of the two controllers is not strictly equivalent once the cycle enters
+  the field-weakening region.
+- There is no `test/test_foc_speed_mtpa.jl` yet; it can be added following
+  `test/test_foc_speed_f1.jl` with `controller = :foc_speed_mtpa`.
+- Using `calc_acceleration(...; set_speed = ...)` inside a DAE solve advances the
+  discrete controller states once per residual evaluation. Prefer
+  `step_drive_from_kite!` for research runs.
