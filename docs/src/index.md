@@ -6,7 +6,7 @@ CurrentModule = ElectricMachineWinch
 
 `ElectricMachineWinch.jl` is a *bridge* package for testing detailed
 induction-machine electric drives as winch models in the
-KiteSimulators/KiteModels ecosystem. It provides a winch type compatible with
+KiteControllers/KiteModels ecosystem. It provides a winch type compatible with
 `WinchModels`,
 
 ```julia

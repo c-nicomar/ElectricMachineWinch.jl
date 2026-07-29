@@ -4,7 +4,7 @@
 CurrentModule = ElectricMachineWinch
 ```
 
-Adding a controller requires no change to KiteSimulators, KiteModels or
+Adding a controller requires no change to KiteControllers, KiteModels or
 KiteControllers — the whole integration is written against
 [`DriveStepOutput`](@ref).
 
