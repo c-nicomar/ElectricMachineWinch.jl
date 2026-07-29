@@ -7,7 +7,8 @@ CurrentModule = ElectricMachineWinch
 A version of the `autopilot.jl` script from KiteControllers that uses this
 package is available as
 [`examples/autopilot_im_winch_FOC_F1.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_FOC_F1.jl).
-[`examples/autopilot_im_winch_patch.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_patch.jl)
+
+The patch [`examples/autopilot_im_winch_patch.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_patch.jl)
 is not runnable on its own — it is the minimal patch to apply to a fresh copy of
 the upstream autopilot example.
 
