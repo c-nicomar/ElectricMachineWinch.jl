@@ -30,7 +30,7 @@ state.**
   mechanical state.
 - **ElectricMachineWinch** owns the electric-drive controller, observer, and
   induction-machine electrical states.
-- **IM_AWES_bench** provides the validated controller, observer, and
+- **IM\_AWES\_bench** provides the validated controller, observer, and
   machine-model building blocks.
 
 The machine speed is therefore *imposed* from the measured reel-out speed and
@@ -162,14 +162,6 @@ Run the test suite:
 
 ```bash
 julia --project=test test/runtests.jl
-```
-
-## Contents
-
-```@contents
-Pages = ["getting_started.md", "controllers.md", "integration.md",
-         "diagnostics.md", "extending.md"]
-Depth = 2
 ```
 
 ## API
