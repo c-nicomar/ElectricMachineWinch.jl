@@ -1,7 +1,7 @@
 name = "ElectricMachineWinch"
 uuid = "0c7c3992-6b03-4dd7-9ce6-b78056c4dd77"
 version = "0.1.0"
-authors = ["Generated bridge package for AWES electric-machine winch integration"]
+authors = ["Carolina Nicolás <canicola@ing.uc3m.es> and contributors"]
 
 [workspace]
 projects = ["examples", "test"]

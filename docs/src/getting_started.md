@@ -178,8 +178,8 @@ wm = make_electric_winch(
 )
 ```
 
-Available controllers are `:ideal`, `:foc_speed_f1`, and `:foc_speed_mtpa`. See the
-README for the full parameter sets of the two FOC variants.
+Available controllers are `:ideal`, `:foc_speed_f1`, and `:foc_speed_mtpa`. See
+[Controllers](controllers.md) for the full parameter sets of the two FOC variants.
 
 ---
 
@@ -277,10 +277,15 @@ compatibility.
 
 ### Working examples
 
-- `examples/autopilot_im_winch_FOC_F1.jl` — a complete autopilot script using the F1
-  controller, including debug logging and CSV export of the drive signals.
-- `examples/autopilot_im_winch_patch.jl` — not runnable on its own; it is the minimal
-  patch to apply to a fresh copy of the upstream autopilot example.
+- [`examples/autopilot_im_winch_FOC_F1.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_FOC_F1.jl)
+  — a complete autopilot script using the F1 controller, including debug logging and
+  CSV export of the drive signals.
+- [`examples/autopilot_im_winch_patch.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_patch.jl)
+  — not runnable on its own; it is the minimal patch to apply to a fresh copy of the
+  upstream autopilot example.
+
+See [KiteModels integration](integration.md) for the full picture of the two
+integration paths.
 
 ---
 

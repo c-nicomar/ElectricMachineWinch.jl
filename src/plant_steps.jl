@@ -125,12 +125,27 @@ function rk4_step_electrical_only(
     )
 end
 
+"""
+    inverse_park_voltage(vsd, vsq, theta_e)
+
+Inverse Park transformation of the stator voltage: rotate the dq voltage
+`(vsd, vsq)` by the electrical field angle `theta_e` [rad] into the stationary
+αβ frame. Returns the tuple `(vsα, vsβ)` fed to
+[`rk4_step_electrical_only`](@ref).
+"""
 function inverse_park_voltage(vsd::Float64, vsq::Float64, theta_e::Float64)
     vsα = cos(theta_e) * vsd - sin(theta_e) * vsq
     vsβ = sin(theta_e) * vsd + cos(theta_e) * vsq
     return vsα, vsβ
 end
 
+"""
+    phase_power_alpha_beta(vsα, vsβ, isα, isβ)
+
+Instantaneous three-phase electrical power [W] of the stator, computed by
+expanding the αβ voltages and currents back into phase quantities and summing
+`va*ia + vb*ib + vc*ic`. Reported as `Pelec` in [`DriveStepOutput`](@ref).
+"""
 function phase_power_alpha_beta(vsα::Float64, vsβ::Float64, isα::Float64, isβ::Float64)
     ia = isα
     ib = -0.5 * isα + sqrt(3) / 2 * isβ

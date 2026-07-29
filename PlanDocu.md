@@ -10,8 +10,9 @@ https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/       # built from main
 https://c-nicomar.github.io/ElectricMachineWinch.jl/stable/    # built from the latest git tag
 ```
 
-Status: **not started.** This document is analysis + plan only. Nothing in the
-repository has been changed.
+Status: **executed on 2026-07-29**, except for the GitHub-side configuration in
+Step 8, which needs repository admin. The local build is green with
+`checkdocs = :all`; see the checklist in §7 for exactly what is left.
 
 Scope: adds `docs/make.jl`, `docs/Project.toml`, `docs/src/`, one GitHub Actions
 workflow and two `bin/` helpers. Touches `src/` only to add docstrings and one
@@ -584,28 +585,35 @@ names exactly which of the repo/branch/token/event checks failed.
 
 ## 7. Checklist
 
-- [ ] `docs/Project.toml` (with both `[sources]` entries) + `docs/.gitignore`
-      created; clean `Pkg.instantiate()` verified; root `.gitignore` line 31 fixed
-- [ ] `docs/GETTING_STARTED.md` `git mv`-ed to `docs/src/getting_started.md`
-- [ ] `README.md` split into `controllers.md`, `integration.md`, `diagnostics.md`,
+- [x] `docs/Project.toml` (with both `[sources]` entries) + `docs/.gitignore`
+      created; clean `Pkg.instantiate()` verified; root `.gitignore` line 31 was
+      already fixed in commit `4a2c885`
+- [x] `docs/GETTING_STARTED.md` `git mv`-ed to `docs/src/getting_started.md`
+- [x] `README.md` split into `controllers.md`, `integration.md`, `diagnostics.md`,
       `extending.md`; README shrunk; relative links rewritten
-- [ ] `docs/src/index.md` written (purpose, layering rule, sign convention, TOC)
-- [ ] `docs/make.jl` written; `authors` and `Project.toml` `authors` corrected
-- [ ] Three `docs/src/api/*.md` pages written, exhaustive over `src/`
-- [ ] `WinchModels.calc_acceleration` confirmed present in the built
-      `api/winch.html` (§Step 5)
-- [ ] Docstring pass: module docstring, generic `drive_step!`, generic `reset!`,
-      `step_drive_from_kite!` exported
-- [ ] `julia --project=docs docs/make.jl` builds clean locally with
+- [x] `docs/src/index.md` written (purpose, layering rule, sign convention, TOC)
+- [x] `docs/make.jl` written; `authors` and `Project.toml` `authors` corrected
+- [x] Three `docs/src/api/*.md` pages written, exhaustive over `src/`
+- [x] `WinchModels.calc_acceleration` confirmed present in the built
+      `api/winch.html` (§Step 5) — the `Pages = ["winch_interface.jl"]`
+      `@autodocs` block picks it up, no explicit `@docs` splice needed
+- [x] Docstring pass: module docstring, generic `drive_step!`, generic `reset!`,
+      `step_drive_from_kite!` exported; `inverse_park_voltage` and
+      `phase_power_alpha_beta` documented too, since `api/plant.md` publishes them
+- [x] `julia --project=docs docs/make.jl` builds clean locally with
       `checkdocs = :all`
-- [ ] `bin/build_docs` and `bin/serve_docs` added and executable
-- [ ] `.github/workflows/Documenter.yml` added (first `.github/` file in the repo)
+- [x] `bin/build_docs` and `bin/serve_docs` added and executable
+- [x] `.github/workflows/Documenter.yml` added (first `.github/` file in the repo)
+- [x] A `names()` vs `Docs.meta()` coverage testset added to `test/runtests.jl`
+      (§6, "Assuming `checkdocs` enforces coverage")
 - [ ] Workflow permissions set to read/write — **needs repository admin**
 - [ ] First `main` build green, `gh-pages` branch created
 - [ ] Pages source set to `gh-pages` / root, `/dev/` reachable — **needs repository
       admin**
-- [ ] `README.md` badges added, `CLAUDE.md` paths updated
+- [x] `README.md` badges added, `CLAUDE.md` paths updated
 - [ ] `v0.1.0` tagged so `/stable/` exists
+- [ ] Reciprocal link added to `../IM_AWES_bench/docs/src/index.md` once `/dev/`
+      is live (§9)
 
 ---
 
