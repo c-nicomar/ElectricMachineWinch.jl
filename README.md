@@ -231,11 +231,25 @@ For full-speed AWES cycles, first verify whether the MTPA case reaches the inver
 ```text
 ElectricMachineWinch.jl/
 ├── Project.toml
+├── Manifest-v1.12.toml.default
 ├── README.md
+├── bin/
+│   ├── dev
+│   ├── free
+│   └── run_julia
+├── data/
+│   ├── settings.yaml
+│   ├── system.yml
+│   ├── fpc_settings.yaml
+│   ├── fpp_settings.yaml
+│   ├── wc_settings.yaml
+│   └── gui.yaml
 ├── docs/
 │   └── GETTING_STARTED.md
 ├── examples/
-│   └── autopilot_im_winch_patch.jl
+│   ├── Project.toml
+│   ├── autopilot_im_winch_patch.jl
+│   └── autopilot_im_winch_FOC_F1.jl
 ├── src/
 │   ├── ElectricMachineWinch.jl
 │   ├── types.jl
@@ -247,9 +261,10 @@ ElectricMachineWinch.jl/
 │       ├── foc_speed_f1.jl
 │       └── foc_speed_mtpa.jl
 └── test/
-    ├── manual_test_ideal_torque.jl
-    ├── manual_test_foc_speed_f1.jl
-    └── runtests.jl
+    ├── Project.toml
+    ├── runtests.jl
+    ├── test_ideal_torque.jl
+    └── test_foc_speed_f1.jl
 ```
 
 ---
@@ -288,11 +303,11 @@ After changing controller types, struct definitions, module includes, or exports
 
 ## Standalone checks
 
-Run the current manual tests from the package root:
+Run the individual test files from the package root:
 
 ```bash
-julia --project=. test/manual_test_ideal_torque.jl
-julia --project=. test/manual_test_foc_speed_f1.jl
+julia --project=test test/test_ideal_torque.jl
+julia --project=test test/test_foc_speed_f1.jl
 ```
 
 Run the package test suite with:
@@ -303,7 +318,7 @@ Pkg.activate(".")
 Pkg.test()
 ```
 
-A dedicated `manual_test_foc_speed_mtpa.jl` can be added following the same structure as `manual_test_foc_speed_f1.jl`, with:
+A dedicated `test_foc_speed_mtpa.jl` can be added following the same structure as `test_foc_speed_f1.jl`, with:
 
 ```julia
 controller = :foc_speed_mtpa
@@ -410,34 +425,10 @@ This keeps the speed-loop tuning and the inertia/friction feedforward consistent
 
 ## KiteControllers integration
 
-Add the local packages to the KiteSimulators environment:
+A version of the `autopilot.jl` script from KiteControllers that is using this package can be found in the examples directory.
 
-```julia
-using Pkg
 
-Pkg.activate("path/to/KiteSimulators.jl")
-Pkg.develop(path = "path/to/ElectricMachineWinch.jl")
-Pkg.develop(path = "path/to/IM_AWES_bench.jl")
-Pkg.develop(path = "path/to/WinchModels.jl")
-Pkg.instantiate()
-```
-
-In the autopilot example:
-
-```julia
-using ElectricMachineWinch
-```
-
-After constructing the kite power system, replace its winch:
-
-```julia
-app.kps4.wm = make_electric_winch(
-    controller = :foc_speed_mtpa,
-    # configuration...
-)
-```
-
-### Recommended update pattern
+### The way the integration works
 
 For detailed discrete controllers, update the electric drive exactly once per KiteSimulators macro-step:
 
@@ -469,10 +460,6 @@ For the current discrete adapters, choose `dt_outer` so that `dt_outer / wm.Ts` 
 This pattern is preferred for detailed stateful controllers because numerical solvers may evaluate a mechanical residual or acceleration function more than once per macro-step. Advancing discrete observer/controller states inside every residual evaluation would produce a nonphysical number of controller updates.
 
 The direct `WinchModels.calc_acceleration(...; set_speed=...)` interface remains available for simple integration tests and compatibility.
-
-A complete reproducible KiteSimulators integration is maintained in:
-
-- [`AWES_IM_KiteSimulators_reproducibility.jl`](https://github.com/c-nicomar/AWES_IM_KiteSimulators_reproducibility.jl)
 
 ---
 
