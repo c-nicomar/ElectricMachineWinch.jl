@@ -59,7 +59,7 @@ The rest of the KiteControllers integration can remain unchanged.
   [the home page](index.md). Anything else, and the speed will run away in a
   direction that looks like a controller bug.
 - **The machine speed is imposed**, not integrated. Use
-  [`rk4_step_electrical_only`](@ref) rather than the `IM_AWES_bench` plant step,
+  [`rk4_step_electrical_only`](@ref) rather than the `InductionMachineDrives` plant step,
   which would integrate a second, duplicate mechanical speed state.
 - **Include order matters** in `src/ElectricMachineWinch.jl`:
   `controllers/foc_speed_mtpa.jl` is included *after* `constructors.jl`.

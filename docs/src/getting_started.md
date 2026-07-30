@@ -35,16 +35,16 @@ detailed discrete controllers (see section 7).
 
 ## 2. Requirements and folder layout
 
-The package targets Julia 1.12 and depends on `IM_AWES_bench` and `WinchModels`.
+The package targets Julia 1.12 and depends on `InductionMachineDrives` and `WinchModels`.
 
-`IM_AWES_bench` is resolved from the git URL declared in `[sources]` in
+`InductionMachineDrives` is resolved from the git URL declared in `[sources]` in
 `Project.toml`, so no manual setup is needed for a plain checkout. If you also want to
-edit `IM_AWES_bench` locally, place the projects side by side:
+edit `InductionMachineDrives` locally, place the projects side by side:
 
 ```text
 JuliaModels/
 ├── ElectricMachineWinch.jl/
-├── IM_AWES_bench.jl/
+├── InductionMachineDrives.jl/
 ├── WinchModels.jl/
 └── KiteControllers.jl/
 ```
@@ -64,11 +64,11 @@ This verifies that Julia 1.12 is the active version, copies the committed
 stale `Manifest.toml` in the workspace sub-projects, and then instantiates and
 precompiles the root, `test` and `examples` projects.
 
-`bin/install` refuses to run while `IM_AWES_bench` is developed from a local
+`bin/install` refuses to run while `InductionMachineDrives` is developed from a local
 checkout, since restoring the manifest would undo that. Run `bin/free` first in that
 case (and `bin/dev` again afterwards).
 
-To switch `IM_AWES_bench` to the local sibling checkout `../IM_AWES_bench`:
+To switch `InductionMachineDrives` to the local sibling checkout `../InductionMachineDrives`:
 
 ```bash
 bin/dev
@@ -139,7 +139,7 @@ v_set
   -> winch acceleration
 ```
 
-This is the first test involving the detailed `IM_AWES_bench` model.
+This is the first test involving the detailed `InductionMachineDrives` model.
 
 Run the whole suite with:
 
@@ -173,7 +173,7 @@ Te < 0
 ## 6. Constructing a winch
 
 `make_electric_winch` selects the controller and builds a coherent set of
-`IM_AWES_bench` parameter objects:
+`InductionMachineDrives` parameter objects:
 
 ```julia
 wm = make_electric_winch(
@@ -325,12 +325,12 @@ model.
 
 ### `src/controllers/foc_speed_f1.jl`
 
-Adapter around the validated FOC speed/flux F1 blocks from `IM_AWES_bench`. Supports
+Adapter around the validated FOC speed/flux F1 blocks from `InductionMachineDrives`. Supports
 field weakening.
 
 ### `src/controllers/foc_speed_mtpa.jl`
 
-Adapter around the constrained-MTPA outer speed controller from `IM_AWES_bench`. The
+Adapter around the constrained-MTPA outer speed controller from `InductionMachineDrives`. The
 full outer-loop output is retained in `wm.controller.last_outer` for diagnostics
 (`isd_mtpa`, `isd_floor`, `isd_reserve`, `Te_current_limited`, ...).
 

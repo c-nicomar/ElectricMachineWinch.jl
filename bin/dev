@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Switch IM_AWES_bench from the [sources] git URL to a local `Pkg.develop`.
+# Switch InductionMachineDrives from the [sources] git URL to a local `Pkg.develop`.
 #
 #   bin/dev
 #
-# Comments out the "IM_AWES_bench = {url = ..., rev = ...}" line under
+# Comments out the "InductionMachineDrives = {url = ..., rev = ...}" line under
 # [sources] in Project.toml (so Pkg.develop's local override isn't
-# immediately clobbered by it) and dev's the sibling ../IM_AWES_bench
+# immediately clobbered by it) and dev's the sibling ../InductionMachineDrives
 # checkout into this environment.
 #
 # Works whether called from the repo root or from bin/.
@@ -20,8 +20,8 @@ fi
 awk '
     /^\[sources\]/ { in_sources = 1 }
     /^\[/ && !/^\[sources\]/ { in_sources = 0 }
-    in_sources && /^IM_AWES_bench[[:space:]]*=/ { print "# " $0; next }
+    in_sources && /^InductionMachineDrives[[:space:]]*=/ { print "# " $0; next }
     { print }
 ' Project.toml > Project.toml.tmp && mv Project.toml.tmp Project.toml
 
-julia --project -e 'using Pkg; Pkg.develop(path="../IM_AWES_bench"); Pkg.resolve()'
+julia --project -e 'using Pkg; Pkg.develop(path="../InductionMachineDrives"); Pkg.resolve()'

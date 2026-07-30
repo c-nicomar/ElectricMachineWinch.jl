@@ -9,7 +9,7 @@
 DetailedIMWinch <: WinchModels.AbstractWinchModel
 ```
 
-and connects it to interchangeable electric-drive controllers implemented with the discrete induction-machine blocks from [`IM_AWES_bench`](https://github.com/c-nicomar/IM_AWES_bench.jl).
+and connects it to interchangeable electric-drive controllers implemented with the discrete induction-machine blocks from [`InductionMachineDrives`](https://github.com/c-nicomar/InductionMachineDrives.jl).
 
 The design rule behind the package is that **KiteModels owns the mechanical state, and this package owns only the electrical state**: the machine speed is imposed from the reel-out speed, never integrated here.
 
@@ -23,7 +23,7 @@ The design rule behind the package is that **KiteModels owns the mechanical stat
 
 ## Quickstart
 
-The package targets Julia 1.12. `IM_AWES_bench` is unregistered and resolved from the git URL in `[sources]`, so a fresh checkout needs no manual configuration — just run the setup script once:
+The package targets Julia 1.12. `InductionMachineDrives` is unregistered and resolved from the git URL in `[sources]`, so a fresh checkout needs no manual configuration — just run the setup script once:
 
 ```bash
 git clone https://github.com/c-nicomar/ElectricMachineWinch.jl

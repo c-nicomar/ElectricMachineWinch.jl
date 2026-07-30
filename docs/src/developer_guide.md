@@ -21,7 +21,7 @@ member sub-projects. They resolve against the shared, version-specific
 either sub-project would shadow it and break resolution, which is why
 `bin/install` deletes any it finds.
 
-`IM_AWES_bench` is unregistered and resolved from the git URL declared in
+`InductionMachineDrives` is unregistered and resolved from the git URL declared in
 `[sources]` in `Project.toml`. `docs/` is deliberately **not** a workspace
 member (see [`bin/build_docs`](#bin-build_docs) below), so `docs/Project.toml`
 repeats that `[sources]` entry independently.
@@ -39,7 +39,7 @@ It performs the following steps:
 
 1. **Checks the Julia version** — verifies that `julia` resolves to Julia 1.12
    and exits with a clear error otherwise.
-2. **Refuses to run on a `bin/dev`'d checkout** — if `IM_AWES_bench` is
+2. **Refuses to run on a `bin/dev`'d checkout** — if `InductionMachineDrives` is
    currently developed from a local sibling checkout (detected via a
    commented-out `[sources]` entry or a `path =` entry in the manifest),
    restoring the default manifest would silently undo that. Run `bin/free`
@@ -71,24 +71,24 @@ exports — restart Julia after those instead of relying on Revise to catch up.
 
 ### `bin/dev` and `bin/free`
 
-Switch the `IM_AWES_bench` dependency between the git URL in `[sources]` and a
-local sibling checkout at `../IM_AWES_bench`, for editing both packages at
+Switch the `InductionMachineDrives` dependency between the git URL in `[sources]` and a
+local sibling checkout at `../InductionMachineDrives`, for editing both packages at
 once.
 
 ```bash
-bin/dev     # comment out the [sources] entry, Pkg.develop("../IM_AWES_bench"), Pkg.resolve
+bin/dev     # comment out the [sources] entry, Pkg.develop("../InductionMachineDrives"), Pkg.resolve
 bin/free    # restore the [sources] entry, Pkg.resolve back onto the git source
 ```
 
 Both scripts rewrite `Project.toml` in place, so expect that file to show up
 as modified after running them. `bin/free` does not use `Pkg.free` —
-`IM_AWES_bench` is unregistered, so there is nothing registered to free back
+`InductionMachineDrives` is unregistered, so there is nothing registered to free back
 to; `Pkg.resolve()` alone drops the local `path =` entry in favour of the
 restored `[sources]` entry.
 
 Note that switching with `bin/dev` only affects the root/`test`/`examples`
 workspace. `bin/build_docs`, described next, is a separate environment and
-still resolves `IM_AWES_bench` from the pinned git `rev` unless you also run
+still resolves `InductionMachineDrives` from the pinned git `rev` unless you also run
 `Pkg.develop` inside `docs/`.
 
 ### `bin/build_docs`

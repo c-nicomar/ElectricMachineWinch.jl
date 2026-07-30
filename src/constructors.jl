@@ -9,7 +9,7 @@ Create a `DetailedIMWinch` with one of the available drive controllers:
   Ideal electromagnetic-torque source for initial integration/debugging.
 
 - `controller = :foc_speed_f1`
-  Existing IM_AWES_bench FOC speed controller with the F1 flux strategy.
+  Existing InductionMachineDrives FOC speed controller with the F1 flux strategy.
 
 - `controller = :foc_speed_mtpa`
   Discrete FOC speed controller with constrained MTPA current allocation.
@@ -70,7 +70,7 @@ function make_electric_winch(;
     lambda_rd_floor::Float64 = 0.35,
     Te_reserve::Float64 = 45.0,
 
-    # Optional explicit IM_AWES_bench parameter objects.
+    # Optional explicit InductionMachineDrives parameter objects.
     #
     # When all three F1 controller parameter objects are supplied, the
     # constructor uses them directly instead of the small-machine defaults.

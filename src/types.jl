@@ -35,7 +35,7 @@ end
 """
     InductionMachinePlant
 
-Small mutable wrapper around the validated IM_AWES_bench plant parameters and
+Small mutable wrapper around the validated InductionMachineDrives plant parameters and
 state. This deliberately contains only the electrical machine state/parameters.
 The reel-out mechanics are owned by the KiteModels/WinchModels interface.
 """

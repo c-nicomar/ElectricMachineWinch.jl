@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this package is
 
 `ElectricMachineWinch.jl` is a *bridge* package: it wraps the detailed discrete
-induction-machine drive blocks from `IM_AWES_bench` into a
+induction-machine drive blocks from `InductionMachineDrives` into a
 `WinchModels.AbstractWinchModel` (`DetailedIMWinch`) that KiteModels/KiteSimulators
 can use in place of a simple winch. It contains almost no control math of its own —
-the controllers here are thin adapters around `IM_AWES_bench` blocks.
+the controllers here are thin adapters around `InductionMachineDrives` blocks.
 
 Julia 1.12 is the target. Root `Project.toml` declares a `[workspace]` with the
 `examples` and `test` sub-projects.
@@ -21,7 +21,7 @@ First-time / clean setup:
 bin/install   # check for Julia 1.12, restore the default manifest, instantiate + precompile
 ```
 
-It refuses to run while `IM_AWES_bench` is developed from the local checkout
+It refuses to run while `InductionMachineDrives` is developed from the local checkout
 (detected via a commented-out `[sources]` entry or a `path =` entry in the
 manifest), because restoring the default manifest would silently undo that — run
 `bin/free` first, then `bin/dev` again afterwards if wanted. It also deletes
@@ -46,11 +46,11 @@ bin/run_julia                      # REPL in the root project, Revise loaded if 
 bin/run_julia test/test_foc_speed_f1.jl
 ```
 
-Switching the `IM_AWES_bench` dependency between the git URL in `[sources]` and a
-local sibling checkout at `../IM_AWES_bench`:
+Switching the `InductionMachineDrives` dependency between the git URL in `[sources]` and a
+local sibling checkout at `../InductionMachineDrives`:
 
 ```bash
-bin/dev     # comment out [sources] entry + Pkg.develop("../IM_AWES_bench")
+bin/dev     # comment out [sources] entry + Pkg.develop("../InductionMachineDrives")
 bin/free    # restore [sources] entry + Pkg.resolve
 ```
 
@@ -85,7 +85,7 @@ Tload = drum_radius / gear_ratio * tether_force
 
 `src/plant_steps.jl` therefore reimplements the αβ IM RK4 step as
 *electrical-only* (`rk4_step_electrical_only`) rather than calling the
-`IM_AWES_bench` plant step, which would integrate a second, duplicate mechanical
+`InductionMachineDrives` plant step, which would integrate a second, duplicate mechanical
 speed state.
 
 ### Controller contract
@@ -166,7 +166,7 @@ diagnostics,extending}.md`, so do not copy sections back — the sign convention
 particular must have one source of truth (`docs/src/index.md`).
 
 - `docs/` is **not** a workspace member, so it does not inherit the root `[sources]`
-  entry for the unregistered `IM_AWES_bench`; `docs/Project.toml` repeats it. After
+  entry for the unregistered `InductionMachineDrives`; `docs/Project.toml` repeats it. After
   `bin/dev` the docs build still uses the pinned git `rev` — run `bin/free` first, or
   `Pkg.develop` it in the docs environment too.
 - `checkdocs = :all`: every docstring in the module must be spliced into a page. The

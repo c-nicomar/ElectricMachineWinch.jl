@@ -33,7 +33,7 @@ controller = :ideal
 
 ## `FOCSpeedF1Controller`
 
-Wrapper around the discrete FOC speed-control path from `IM_AWES_bench`:
+Wrapper around the discrete FOC speed-control path from `InductionMachineDrives`:
 
 ```text
 rotor_flux_observer_step!
@@ -62,7 +62,7 @@ controller = :foc_speed_f1
 ## `FOCSpeedMTPAController`
 
 Wrapper around the constrained-MTPA discrete speed controller from
-`IM_AWES_bench`:
+`InductionMachineDrives`:
 
 ```text
 rotor_flux_observer_step!
@@ -138,7 +138,7 @@ speed.
 ## Constructing a winch
 
 [`make_electric_winch`](@ref) selects the controller and builds a coherent set
-of `IM_AWES_bench` parameter objects.
+of `InductionMachineDrives` parameter objects.
 
 ### Ideal controller
 

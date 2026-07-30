@@ -1,4 +1,4 @@
-# Wrapper around the user's validated IM_AWES_bench FOC speed controller.
+# Wrapper around the user's validated InductionMachineDrives FOC speed controller.
 #
 # This controller preserves the existing structure:
 #   rotor flux observer -> outer speed/flux F1 loop -> current controller ->
@@ -8,7 +8,7 @@
     FOCSpeedF1Controller
 
 Controller object holding the observer, outer speed/flux F1 loop, and current
-controller states and parameters from `IM_AWES_bench`.
+controller states and parameters from `InductionMachineDrives`.
 """
 mutable struct FOCSpeedF1Controller <: AbstractIMDriveController
     obs_state::IMB.RotorFluxObserverDiscreteState

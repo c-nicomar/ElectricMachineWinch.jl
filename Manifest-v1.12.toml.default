@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "7015044927e739c811dc17437c1460f6d65b6f00"
+project_hash = "63d5f7057c15cb905723b4c192299d7d2d8dac23"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "0a81a018463de6c3f4f2c9360121c562e5add9e4"
@@ -350,9 +350,9 @@ uuid = "bbf7d656-a473-5ed7-a52c-81e309532950"
 version = "0.3.1"
 
 [[deps.CommonWorldInvalidations]]
-git-tree-sha1 = "cde75cb34c9ee07b4c37981b0f32378d0dc19ffe"
+git-tree-sha1 = "ef2022bff55342a8c9846cdf218f62e475f0444d"
 uuid = "f70d9fcc-98c5-4d4a-abd7-e4cdeebd8ca8"
-version = "1.1.1"
+version = "1.1.2"
 
 [[deps.Compat]]
 deps = ["TOML", "UUIDs"]
@@ -385,9 +385,9 @@ uuid = "95dc2771-c249-4cd0-9c9f-1f3b4330693c"
 version = "0.1.8"
 
 [[deps.ConcreteStructs]]
-git-tree-sha1 = "23a2ac1ab2a39460d4feecddf09b02e9019d6dd5"
+git-tree-sha1 = "804fc3ca1cbfdd5aa52ae3149c0cb0555f875eec"
 uuid = "2569d6c7-a4a2-43d3-a901-331e8e4be471"
-version = "0.2.6"
+version = "0.2.7"
 
 [[deps.ConcurrentUtilities]]
 deps = ["Serialization", "Sockets"]
@@ -644,7 +644,7 @@ uuid = "5ae413db-bbd1-5e63-b57d-d24a61df00f5"
 version = "2.2.4+0"
 
 [[deps.ElectricMachineWinch]]
-deps = ["IM_AWES_bench", "WinchModels"]
+deps = ["InductionMachineDrives", "WinchModels"]
 path = "."
 uuid = "0c7c3992-6b03-4dd7-9ce6-b78056c4dd77"
 version = "0.1.0"
@@ -1009,20 +1009,6 @@ git-tree-sha1 = "31bb6c92405c084617facc1d7ed9eb6c402d061e"
 uuid = "34004b35-14d8-5ef3-9330-4cdb6864b03a"
 version = "0.3.30"
 
-[[deps.IM_AWES_bench]]
-git-tree-sha1 = "a828a634e33f872c2d0b07cca97b8950d7257efd"
-repo-rev = "main"
-repo-url = "https://github.com/c-nicomar/IM_AWES_bench.jl"
-uuid = "d85c8359-f9b8-4611-8006-e67b7a824205"
-version = "1.0.0"
-
-    [deps.IM_AWES_bench.extensions]
-    IM_AWES_benchMTKExt = ["ModelingToolkit", "OrdinaryDiffEq"]
-
-    [deps.IM_AWES_bench.weakdeps]
-    ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
-    OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
-
 [[deps.IfElse]]
 git-tree-sha1 = "debdd00ffef04665ccbb3e150747a77560e8fad1"
 uuid = "615f187c-cbe4-4ef1-ba3b-2fcf58d6d173"
@@ -1068,6 +1054,20 @@ version = "3.2.2+0"
 git-tree-sha1 = "012e604e1c7458645cb8b436f8fba789a51b257f"
 uuid = "9b13fd28-a010-5f03-acff-a1bbcff69959"
 version = "1.0.0"
+
+[[deps.InductionMachineDrives]]
+git-tree-sha1 = "96172fdfa51412f4e5ca2b1e8658e3eff4639244"
+repo-rev = "main"
+repo-url = "https://github.com/c-nicomar/InductionMachineDrives.jl"
+uuid = "d85c8359-f9b8-4611-8006-e67b7a824205"
+version = "1.0.0"
+
+    [deps.InductionMachineDrives.extensions]
+    InductionMachineDrivesMTKExt = ["ModelingToolkit", "OrdinaryDiffEq"]
+
+    [deps.InductionMachineDrives.weakdeps]
+    ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+    OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 
 [[deps.Inflate]]
 git-tree-sha1 = "d1b1b796e47d94588b3757fe84fbf65a5ec4a80d"
@@ -1639,9 +1639,9 @@ version = "2025.11.4"
 
 [[deps.MuladdMacro]]
 deps = ["PrecompileTools"]
-git-tree-sha1 = "e8dcbeef032ba2f9051a44ac22b4e54e3a1a0099"
+git-tree-sha1 = "283bf85d4a767481dd924dff0eee1735e95f449e"
 uuid = "46d2c3a1-f734-5fdb-9937-b9b9aeba4221"
-version = "0.2.6"
+version = "0.2.7"
 
 [[deps.NLSolversBase]]
 deps = ["ADTypes", "DifferentiationInterface", "Distributed", "FiniteDiff", "ForwardDiff"]
@@ -2052,10 +2052,10 @@ uuid = "43287f4e-b6f4-7ad1-bb20-aadabca52c3d"
 version = "1.4.0"
 
 [[deps.PureKLU]]
-deps = ["LinearAlgebra", "MuladdMacro", "PrecompileTools", "SparseArrays"]
-git-tree-sha1 = "c24613c5ca510086fb22fe891d48d8969839dae1"
+deps = ["LinearAlgebra", "PrecompileTools", "SparseArrays"]
+git-tree-sha1 = "7ef298d8ec41c57fd93239023836696f9c90e524"
 uuid = "0c0d3e7f-3a8b-4f7e-b6f1-9a4d2e7c1f01"
-version = "1.1.1"
+version = "1.2.0"
 weakdeps = ["ForwardDiff"]
 
     [deps.PureKLU.extensions]
@@ -2238,9 +2238,9 @@ version = "0.2.1"
 
 [[deps.RuntimeGeneratedFunctions]]
 deps = ["ExprTools", "SHA", "Serialization"]
-git-tree-sha1 = "0e3eba2ca347b001baade9fb830623e04da64b38"
+git-tree-sha1 = "6368773b8b433a5c6d9f8b9427c5fbded65fc8c0"
 uuid = "7e49a35a-f44a-4d26-94aa-eba1b4ca6b47"
-version = "0.5.22"
+version = "0.5.23"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -2322,19 +2322,17 @@ version = "1.10.1"
 
 [[deps.SciMLOperators]]
 deps = ["Accessors", "Adapt", "ArrayInterface", "DocStringExtensions", "LinearAlgebra"]
-git-tree-sha1 = "10e4313d1bce847140611c12469ce532ffbdf3dd"
+git-tree-sha1 = "07f8cd79cfa622d92e961bd9fde607220bfe269a"
 uuid = "c0aeaf25-5076-4817-a8d5-81caf7dfa961"
-version = "1.25.0"
+version = "1.25.1"
 
     [deps.SciMLOperators.extensions]
     SciMLOperatorsLoopVectorizationExt = "LoopVectorization"
     SciMLOperatorsSparseArraysExt = "SparseArrays"
-    SciMLOperatorsStaticArraysCoreExt = "StaticArraysCore"
 
     [deps.SciMLOperators.weakdeps]
     LoopVectorization = "bdcacae8-1622-11e9-2a5c-532679323890"
     SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
-    StaticArraysCore = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
 
 [[deps.SciMLPublic]]
 git-tree-sha1 = "cf9aaf8b9ed5db993259ea8b24cf2b7ba9bd3b79"
@@ -2437,9 +2435,9 @@ version = "1.12.0"
 
 [[deps.SparseColumnPivotedQR]]
 deps = ["LinearAlgebra", "PrecompileTools", "SparseArrays"]
-git-tree-sha1 = "cd2b583a035b559dbd7c3a9a88c43dc2a86203ca"
+git-tree-sha1 = "6c16137917345386c614ab68dd58e4bdc3f4a6e0"
 uuid = "a57abbd0-fea5-4d57-96be-5e525945e8e4"
-version = "2.1.4"
+version = "2.1.5"
 weakdeps = ["AMD"]
 
     [deps.SparseColumnPivotedQR.extensions]
@@ -2491,9 +2489,9 @@ version = "0.1.2"
 
 [[deps.Static]]
 deps = ["CommonWorldInvalidations", "IfElse", "PrecompileTools", "SciMLPublic"]
-git-tree-sha1 = "5ef96deaf82834d64e1456c6a6665ca4188afd48"
+git-tree-sha1 = "4abff9ad312e476839c25b9398f619255af9a0e4"
 uuid = "aedffcd0-7271-4cad-89d0-dc628f76c6d3"
-version = "1.4.4"
+version = "1.4.5"
 
 [[deps.StaticArrayInterface]]
 deps = ["ArrayInterface", "Compat", "IfElse", "LinearAlgebra", "PrecompileTools", "SciMLPublic", "Static"]

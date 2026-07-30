@@ -5,7 +5,7 @@ CurrentModule = ElectricMachineWinch
 ```
 
 The electrical-only αβ induction-machine step. It mirrors the validated
-`IM_AWES_bench` machine equations, but does **not** integrate the mechanical
+`InductionMachineDrives` machine equations, but does **not** integrate the mechanical
 speed: KiteModels already owns the reel-out speed state, so the machine speed is
 imposed here.
 

@@ -1,6 +1,6 @@
 # Electrical-only induction-machine RK4 step.
 #
-# This mirrors the validated IM_AWES_bench alpha-beta IM equations, but it does
+# This mirrors the validated InductionMachineDrives alpha-beta IM equations, but it does
 # NOT integrate mechanical speed using Te + Tload. KiteModels already owns the
 # reel-out speed state. Here we impose the machine speed corresponding to the
 # current kite reel-out speed and only integrate electrical currents/rotor states.
@@ -22,7 +22,7 @@ end
     im_torque(x, p)
 
 Electromagnetic torque of the IM model, using the same expression as
-IM_AWES_bench. Reimplemented here to avoid relying on non-exported internals.
+InductionMachineDrives. Reimplemented here to avoid relying on non-exported internals.
 """
 function im_torque(x::IMB.IMPlantState, p::IMB.IMPlantParams)
     ψsα, ψsβ, _, _ = _im_fluxes(x, p)

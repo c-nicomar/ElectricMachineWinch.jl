@@ -28,7 +28,7 @@ jobs:
       - uses: julia-actions/cache@v2
       # No julia-actions/julia-buildpkg: instantiating docs/ already develops
       # the package through its [sources] entry. The same step clones the
-      # unregistered (but public) IM_AWES_bench from the git URL pinned there.
+      # unregistered (but public) InductionMachineDrives from the git URL pinned there.
       - name: Instantiate docs environment
         run: julia --project=docs -e 'using Pkg; Pkg.instantiate()'
       - name: Build and deploy
