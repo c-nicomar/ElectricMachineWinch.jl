@@ -37,7 +37,7 @@ local sibling checkout at `../IM_AWES_bench`:
 
 ```bash
 bin/dev     # comment out [sources] entry + Pkg.develop("../IM_AWES_bench")
-bin/free    # restore [sources] entry + Pkg.free
+bin/free    # restore [sources] entry + Pkg.resolve
 ```
 
 Both scripts rewrite `Project.toml` in place, so expect that file to show up as
