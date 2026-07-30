@@ -2,7 +2,7 @@
 
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/)
 
-`ElectricMachineWinch.jl` is a bridge package for testing detailed induction-machine electric drives as winch models in the KiteSimulators/KiteModels ecosystem. It provides a winch type compatible with `WinchModels`,
+`ElectricMachineWinch.jl` is a bridge package for testing detailed induction-machine electric drives as winch models in the KiteControllers/KiteModels ecosystem. It provides a winch type compatible with `WinchModels`,
 
 ```julia
 DetailedIMWinch <: WinchModels.AbstractWinchModel
@@ -57,7 +57,7 @@ julia --project=test test/runtests.jl
 The manual is at
 [c-nicomar.github.io/ElectricMachineWinch.jl/dev](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/):
 
-- [Getting started](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/getting_started/) — setup, the standalone tests, and the KiteSimulators walkthrough
+- [Getting started](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/getting_started/) — setup, the standalone tests, and the KiteControllers walkthrough
 - [Controllers](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/controllers/) — the three controllers and their full parameter sets
 - [KiteModels integration](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/integration/) — `step_drive_from_kite!` versus `calc_acceleration`
 - [Diagnostics](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/diagnostics/) — logged signals and a fair F1/MTPA comparison
