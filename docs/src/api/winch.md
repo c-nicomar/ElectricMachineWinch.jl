@@ -10,11 +10,20 @@ CurrentModule = ElectricMachineWinch
 ElectricMachineWinch
 ```
 
-## Core types
+## Types
 
 ```@autodocs
 Modules = [ElectricMachineWinch]
 Pages   = ["types.jl"]
+Order   = [:type]
+```
+
+## Functions
+
+```@autodocs
+Modules = [ElectricMachineWinch]
+Pages   = ["types.jl"]
+Order   = [:function]
 ```
 
 ## KiteModels interface

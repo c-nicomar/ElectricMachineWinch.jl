@@ -5,7 +5,7 @@ CurrentModule = ElectricMachineWinch
 ```
 
 Every controller implements the [`drive_step!`](@ref) contract documented under
-[Core types](winch.md#Core-types).
+[Types](winch.md#Types).
 
 ## Ideal torque controller
 
@@ -21,9 +21,18 @@ Modules = [ElectricMachineWinch]
 Pages   = ["controllers/foc_speed_f1.jl"]
 ```
 
-## FOC speed controller, constrained MTPA
+## FOC speed controller, constrained MTPA: Types
 
 ```@autodocs
 Modules = [ElectricMachineWinch]
 Pages   = ["controllers/foc_speed_mtpa.jl"]
+Order   = [:type]
+```
+
+## FOC speed controller, constrained MTPA: Functions
+
+```@autodocs
+Modules = [ElectricMachineWinch]
+Pages   = ["controllers/foc_speed_mtpa.jl"]
+Order   = [:function]
 ```
