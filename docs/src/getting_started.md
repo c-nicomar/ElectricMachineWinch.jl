@@ -6,7 +6,7 @@ This document explains what the bridge package does and how to start testing it.
 
 ## 1. Why this package exists
 
-`KiteSimulators.jl` should remain mostly untouched. The clean way to include a
+`KiteControllers.jl` should remain mostly untouched. The clean way to include a
 detailed electric machine model is to provide a new object that behaves like a
 `WinchModels` winch.
 
@@ -46,7 +46,7 @@ JuliaModels/
 ├── ElectricMachineWinch.jl/
 ├── IM_AWES_bench.jl/
 ├── WinchModels.jl/
-└── KiteSimulators.jl/
+└── KiteControllers.jl/
 ```
 
 ---
@@ -98,7 +98,7 @@ or, in a running REPL:
 include("test/test_ideal_torque.jl")
 ```
 
-This test does not use KiteSimulators. It checks only:
+This test does not use KiteControllers. It checks only:
 
 ```text
 v_set -> speed PI -> torque actuator -> winch acceleration -> v_reelout
@@ -107,7 +107,7 @@ v_set -> speed PI -> torque actuator -> winch acceleration -> v_reelout
 The important thing is not the exact numbers, but that the script runs without
 errors and that speed, torque, and acceleration stay finite.
 
-If this fails, debug the bridge package before connecting KiteSimulators.
+If this fails, debug the bridge package before connecting KiteControllers.
 
 ---
 
@@ -178,14 +178,14 @@ wm = make_electric_winch(
 )
 ```
 
-Available controllers are `:ideal`, `:foc_speed_f1`, and `:foc_speed_mtpa`. See the
-README for the full parameter sets of the two FOC variants.
+Available controllers are `:ideal`, `:foc_speed_f1`, and `:foc_speed_mtpa`. See
+[Controllers](controllers.md) for the full parameter sets of the two FOC variants.
 
 ---
 
-## 7. Connecting to KiteSimulators autopilot
+## 7. Connecting to KiteControllers autopilot
 
-In your `KiteSimulators.jl` project, add the bridge package to the environment:
+In your `KiteControllers.jl` project, add the bridge package to the environment:
 
 ```julia
 using Pkg
@@ -244,7 +244,7 @@ app.kps4.wm = make_electric_winch(
 
 ### Stepping the drive
 
-Update the electric drive exactly once per KiteSimulators macro-step, then hand the
+Update the electric drive exactly once per KiteControllers macro-step, then hand the
 resulting torque to the mechanical update:
 
 ```julia
@@ -277,10 +277,15 @@ compatibility.
 
 ### Working examples
 
-- `examples/autopilot_im_winch_FOC_F1.jl` — a complete autopilot script using the F1
-  controller, including debug logging and CSV export of the drive signals.
-- `examples/autopilot_im_winch_patch.jl` — not runnable on its own; it is the minimal
-  patch to apply to a fresh copy of the upstream autopilot example.
+- [`examples/autopilot_im_winch_FOC_F1.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_FOC_F1.jl)
+  — a complete autopilot script using the F1 controller, including debug logging and
+  CSV export of the drive signals.
+- [`examples/autopilot_im_winch_patch.jl`](https://github.com/c-nicomar/ElectricMachineWinch.jl/blob/main/examples/autopilot_im_winch_patch.jl)
+  — not runnable on its own; it is the minimal patch to apply to a fresh copy of the
+  upstream autopilot example.
+
+See [KiteModels integration](integration.md) for the full picture of the two
+integration paths.
 
 ---
 
@@ -306,7 +311,7 @@ contains `im_torque`, `inverse_park_voltage`, and `phase_power_alpha_beta`.
 ### `src/controllers/ideal_torque.jl`
 
 Speed PI plus a first-order torque actuator with rate and magnitude limits. No
-electrical plant. Used to debug the KiteSimulators coupling before adding the machine
+electrical plant. Used to debug the KiteControllers coupling before adding the machine
 model.
 
 ### `src/controllers/foc_speed_f1.jl`
@@ -352,7 +357,7 @@ last_summary(wm)
 
 ## 10. Adding another controller
 
-Do not modify KiteSimulators. Add a new controller type:
+Do not modify KiteControllers. Add a new controller type:
 
 ```julia
 mutable struct MyNewController <: AbstractIMDriveController

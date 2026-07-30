@@ -1,7 +1,7 @@
 name = "ElectricMachineWinch"
 uuid = "0c7c3992-6b03-4dd7-9ce6-b78056c4dd77"
 version = "0.1.0"
-authors = ["Generated bridge package for AWES electric-machine winch integration"]
+authors = ["Carolina Nicolás <canicola@ing.uc3m.es> and contributors"]
 
 [workspace]
 projects = ["examples", "test"]
@@ -13,7 +13,7 @@ WinchModels = "7dcfa46b-7979-4771-bbf4-0aee0da42e1f"
 [compat]
 IM_AWES_bench = "1.0.0"
 WinchModels = "0.3.9"
-julia = "1.10"
+julia = "1.12"
 
 [sources]
 IM_AWES_bench = {url = "https://github.com/c-nicomar/IM_AWES_bench.jl", rev = "main"}

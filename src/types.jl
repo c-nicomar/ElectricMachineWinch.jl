@@ -60,6 +60,60 @@ The method must return a `DriveStepOutput`.
 abstract type AbstractIMDriveController end
 
 """
+    drive_step!(controller, plant; ωm_ref, ωm, Tload, Ts, plant_substeps) -> DriveStepOutput
+
+Advance one electric-drive controller sample and return the resulting
+[`DriveStepOutput`](@ref).
+
+This is *the* extension point of the package: every
+[`AbstractIMDriveController`](@ref) implements exactly this method, and because
+the return value is the same for all of them, [`DetailedIMWinch`](@ref) and the
+KiteModels interface stay controller-agnostic.
+
+Arguments:
+- `controller`: the controller object, whose discrete states are updated in place
+- `plant`: [`InductionMachinePlant`](@ref) holding the electrical machine
+  parameters and state; also updated in place by controllers that use it
+
+Keyword arguments:
+- `ωm_ref`: machine-side speed reference [rad/s], `gear_ratio/drum_radius * v_ro_set`
+- `ωm`: measured/imposed machine-side speed [rad/s],
+  `gear_ratio/drum_radius * v_reelout`
+- `Tload`: machine-side load torque [Nm], `drum_radius/gear_ratio * tether_force`
+- `Ts`: controller sample time [s]
+- `plant_substeps`: RK4 substeps of the electrical plant per controller sample
+
+Sign convention, which every implementation must follow:
+
+    J*dωm/dt = Te + Tload - B*ωm
+
+A positive `Tload` pulls toward positive reel-out. During positive-speed
+generation expect `ωm > 0`, `Tload > 0` and a negative electromagnetic torque
+`Te`.
+
+The mechanical speed is *imposed*, never integrated: implementations synchronize
+`plant.x.ωm` with `ωm` and integrate the electrical states only, with
+[`rk4_step_electrical_only`](@ref).
+"""
+function drive_step! end
+
+"""
+    reset!(wm::DetailedIMWinch)
+    reset!(controller::AbstractIMDriveController)
+
+Clear all stored last-step values and discrete controller/observer states, so
+that the same object can be reused for another run.
+
+`reset!(wm)` zeroes the logging fields and the `n_acceleration_calls` counter of
+the winch and then resets its controller. For controllers, the fallback
+`reset!(::AbstractIMDriveController) = nothing` covers stateless implementations;
+controllers with discrete states add their own method.
+
+Note that the electrical plant state is *not* reset by these methods.
+"""
+function reset! end
+
+"""
     DetailedIMWinch
 
 KiteSimulators/KiteModels-compatible winch model.

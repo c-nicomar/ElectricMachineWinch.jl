@@ -43,6 +43,14 @@ bin/free    # restore [sources] entry + Pkg.free
 Both scripts rewrite `Project.toml` in place, so expect that file to show up as
 modified after running them.
 
+Documentation (Documenter.jl, deployed to GitHub Pages by
+`.github/workflows/Documenter.yml`):
+
+```bash
+bin/build_docs      # instantiate docs/ and build into docs/build/
+bin/serve_docs      # live-reload preview on http://localhost:8000
+```
+
 `Manifest-v1.12.toml` is gitignored; `Manifest-v1.12.toml.default` is the committed
 reference copy.
 
@@ -135,6 +143,24 @@ Subtype `AbstractIMDriveController`, implement `drive_step!` returning
 `DriveStepOutput`, then: include + export it in `src/ElectricMachineWinch.jl`, add a
 selector branch in `src/constructors.jl`, and add a test file following
 `test/test_foc_speed_f1.jl`. The KiteControllers integration needs no changes.
+
+## Documentation
+
+The manual lives in `docs/src/` and is built by `docs/make.jl`. `README.md` is
+deliberately short: the prose was *moved* into `docs/src/{controllers,integration,
+diagnostics,extending}.md`, so do not copy sections back — the sign convention in
+particular must have one source of truth (`docs/src/index.md`).
+
+- `docs/` is **not** a workspace member, so it does not inherit the root `[sources]`
+  entry for the unregistered `IM_AWES_bench`; `docs/Project.toml` repeats it. After
+  `bin/dev` the docs build still uses the pinned git `rev` — run `bin/free` first, or
+  `Pkg.develop` it in the docs environment too.
+- `checkdocs = :all`: every docstring in the module must be spliced into a page. The
+  three `docs/src/api/*.md` pages must stay exhaustive over `src/` — a new source
+  file needs an `@autodocs` block, or the build fails.
+- The docstring for `WinchModels.calc_acceleration` is a foreign binding written in
+  this package; it is picked up by the `Pages = ["winch_interface.jl"]` block. Never
+  add `WinchModels` to `modules` in `make.jl`.
 
 ## Examples
 

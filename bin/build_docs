@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Build the Documenter.jl documentation into docs/build/.
+#
+# The docs environment (docs/Project.toml) is deliberately NOT a member of the
+# workspace declared in the root Project.toml, so it resolves on its own and
+# instantiate is cheap to repeat. Its Manifest.toml is gitignored.
+#
+# Because docs/ is outside the workspace, it does not inherit the root
+# [sources] entry for the unregistered IM_AWES_bench either -- docs/Project.toml
+# repeats it. Note that it repeats the *git URL* version: after bin/dev the root
+# project resolves IM_AWES_bench from ../IM_AWES_bench while the docs build
+# still uses the pinned rev. If you are editing both packages, run bin/free
+# first, or Pkg.develop it in the docs environment too.
+
+set -eu
+
+if [[ $(basename $(pwd)) == "bin" ]]; then
+    cd ..
+fi
+
+echo "Instantiating the docs environment ..."
+julia --startup-file=no --project=docs -e 'using Pkg; Pkg.instantiate()'
+
+echo "Building the documentation ..."
+julia --startup-file=no --project=docs docs/make.jl
+
+echo "Done. Open docs/build/index.html"
