@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          # Matches the committed Manifest-v1.12.toml.default; '1' would drift.
+          version: '1.12'
+      - uses: julia-actions/cache@v2
+      # Mirrors bin/install: restore the default manifest and drop any
+      # per-project manifests that would shadow the shared workspace one.
+      - name: Restore default manifest
+        run: cp Manifest-v1.12.toml.default Manifest-v1.12.toml
+      - name: Instantiate workspace
+        run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
+      - name: Run tests
+        run: julia --project=test test/runtests.jl
