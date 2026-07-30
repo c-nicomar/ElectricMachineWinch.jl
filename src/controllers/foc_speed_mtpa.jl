@@ -27,7 +27,7 @@ The object owns the states and parameters of:
 3. the inner discrete current controller.
 
 `last_outer` retains the complete `OuterSpeedFluxMTPAOutput` from the most
-recent controller step so that the KiteSimulators example can log MTPA-specific
+recent controller step so that the KiteControllers example can log MTPA-specific
 diagnostics such as `isd_mtpa`, `isd_floor`, `isd_reserve`,
 `Te_current_limited`, and `torque_current_limited`.
 """

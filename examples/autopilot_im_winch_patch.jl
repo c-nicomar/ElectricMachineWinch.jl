@@ -1,8 +1,8 @@
-# This is NOT a complete copy of KiteSimulators/examples/autopilot.jl.
+# This is NOT a complete copy of KiteControllers/examples/autopilot.jl.
 # It is the minimal patch you apply to a copied autopilot example.
 #
 # Recommended workflow:
-#   1. In KiteSimulators.jl, copy examples/autopilot.jl to examples/autopilot_im_winch.jl
+#   1. In KiteControllers.jl, copy examples/autopilot.jl to examples/autopilot_im_winch.jl
 #   2. Add `using ElectricMachineWinch` near the other using statements.
 #   3. After `app.kps4 = KPS4(app.kcu)`, insert one of the blocks below.
 #

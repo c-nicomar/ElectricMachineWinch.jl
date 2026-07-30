@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `ElectricMachineWinch.jl` is a *bridge* package: it wraps the detailed discrete
 induction-machine drive blocks from `InductionMachineDrives` into a
-`WinchModels.AbstractWinchModel` (`DetailedIMWinch`) that KiteModels/KiteSimulators
+`WinchModels.AbstractWinchModel` (`DetailedIMWinch`) that KiteModels/KiteControllers
 can use in place of a simple winch. It contains almost no control math of its own —
 the controllers here are thin adapters around `InductionMachineDrives` blocks.
 
@@ -116,7 +116,7 @@ electrical-only RK4 → `im_torque`.
    solver may call it several times per macro-step, giving a nonphysical number of
    discrete controller updates. `wm.n_acceleration_calls` exists to detect this.
 2. `step_drive_from_kite!(wm, v_ro_set, v_ro_meas, F; dt_outer)` — the preferred
-   path for the detailed discrete controllers. Called once per KiteSimulators
+   path for the detailed discrete controllers. Called once per KiteControllers
    macro-step; internally runs `round(Int, dt_outer/wm.Ts)` substeps with kite-side
    variables held constant, then the returned torque is passed to
    `KiteModels.next_step!(...; set_torque = Te_cmd)`. Choose `dt_outer` so

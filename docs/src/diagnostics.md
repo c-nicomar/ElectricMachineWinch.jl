@@ -93,7 +93,7 @@ keep the following identical unless the parameter itself is under study:
 - current-controller parameters;
 - rotor-flux observer;
 - load-feedforward configuration;
-- KiteSimulators macro-step.
+- KiteControllers macro-step.
 
 Useful comparison metrics include:
 

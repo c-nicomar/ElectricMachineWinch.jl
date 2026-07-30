@@ -97,7 +97,7 @@ end
 """
     step_drive_from_kite!(wm, v_ro_set, v_ro_meas, tether_force; dt_outer)
 
-Update the electric drive/controller once from the KiteSimulators loop, but
+Update the electric drive/controller once from the KiteControllers loop, but
 internally run the electrical/FOC model with its own smaller timestep `wm.Ts`.
 
 Returns the latest machine-side electromagnetic torque [Nm].

@@ -1,7 +1,7 @@
 # Core type definitions for the ElectricMachineWinch bridge.
 #
 # The design intentionally separates:
-#   1. the KiteSimulators-compatible winch wrapper,
+#   1. the KiteControllers-compatible winch wrapper,
 #   2. the electrical machine plant state,
 #   3. the replaceable controller object.
 
@@ -116,7 +116,7 @@ function reset! end
 """
     DetailedIMWinch
 
-KiteSimulators/KiteModels-compatible winch model.
+KiteControllers/KiteModels-compatible winch model.
 
 It subtypes `WinchModels.AbstractWinchModel`, so when KiteModels calls
 `calc_acceleration(wm, ...)`, Julia dispatches to the method defined in this

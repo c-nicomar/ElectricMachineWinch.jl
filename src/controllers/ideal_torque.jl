@@ -5,7 +5,7 @@
 """
     IdealTorqueController
 
-Minimal controller for debugging the KiteSimulators integration before adding
+Minimal controller for debugging the KiteControllers integration before adding
 full IM electrical dynamics.
 
 Mechanical convention:

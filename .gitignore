@@ -33,9 +33,6 @@ desktop.ini
 # Julia manifests (Manifest-v1.12.toml.default is the committed copy)
 Manifest-v1.12.toml
 
-# Editor / workspace files
-AWES_IM_KiteSimulators_reproducibility.jl.code-workspace
-
 # Archives and generated output
 IM_AWES_jl.zip
 output/*.*

@@ -2,7 +2,7 @@
     ElectricMachineWinch
 
 Bridge package that exposes a detailed induction-machine electric drive as a
-`WinchModels.AbstractWinchModel`, so that KiteModels/KiteSimulators can use it
+`WinchModels.AbstractWinchModel`, so that KiteModels/KiteControllers can use it
 in place of a simple winch.
 
 The layering rule behind the whole package is:
@@ -21,7 +21,7 @@ Main entry points:
 
 - [`make_electric_winch`](@ref) builds a [`DetailedIMWinch`](@ref) with one of
   the controllers `:ideal`, `:foc_speed_f1` or `:foc_speed_mtpa`.
-- [`step_drive_from_kite!`](@ref) advances the drive once per KiteSimulators
+- [`step_drive_from_kite!`](@ref) advances the drive once per KiteControllers
   macro-step; this is the preferred integration path.
 - `WinchModels.calc_acceleration` is the `WinchModels` interface method.
 - [`last_summary`](@ref) returns the most useful last-step values.
