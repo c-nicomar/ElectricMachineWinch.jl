@@ -1,7 +1,6 @@
 # ElectricMachineWinch.jl
 
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/)
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://c-nicomar.github.io/ElectricMachineWinch.jl/stable/)
 
 `ElectricMachineWinch.jl` is a bridge package for testing detailed induction-machine electric drives as winch models in the KiteSimulators/KiteModels ecosystem. It provides a winch type compatible with `WinchModels`,
 
