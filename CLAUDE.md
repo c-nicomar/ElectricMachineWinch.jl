@@ -15,6 +15,20 @@ Julia 1.12 is the target. Root `Project.toml` declares a `[workspace]` with the
 
 ## Commands
 
+First-time / clean setup:
+
+```bash
+bin/install   # check for Julia 1.12, restore the default manifest, instantiate + precompile
+```
+
+It refuses to run while `IM_AWES_bench` is developed from the local checkout
+(detected via a commented-out `[sources]` entry or a `path =` entry in the
+manifest), because restoring the default manifest would silently undo that — run
+`bin/free` first, then `bin/dev` again afterwards if wanted. It also deletes
+`Manifest.toml`, `test/Manifest.toml` and `examples/Manifest.toml`: a manifest in a
+workspace sub-project shadows the shared `Manifest-v1.12.toml` and breaks
+resolution.
+
 Run tests (preferred: in the shared REPL via the kaimon `ex` tool, since each test
 file activates `test/` itself):
 
@@ -52,7 +66,7 @@ bin/serve_docs      # live-reload preview on http://localhost:8000
 ```
 
 `Manifest-v1.12.toml` is gitignored; `Manifest-v1.12.toml.default` is the committed
-reference copy.
+reference copy that `bin/install` copies over it.
 
 Revise does not pick up changes to struct definitions, module includes, or exports —
 restart Julia after those.
