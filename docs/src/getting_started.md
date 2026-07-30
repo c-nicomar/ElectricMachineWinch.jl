@@ -53,11 +53,20 @@ JuliaModels/
 
 ## 3. Configure dependencies
 
-Default (git source) setup:
+Default (git source) setup, after cloning the repository:
 
 ```bash
-julia --project -e 'using Pkg; Pkg.instantiate()'
+bin/install
 ```
+
+This verifies that Julia 1.12 is the active version, copies the committed
+`Manifest-v1.12.toml.default` over the gitignored `Manifest-v1.12.toml`, removes any
+stale `Manifest.toml` in the workspace sub-projects, and then instantiates and
+precompiles the root, `test` and `examples` projects.
+
+`bin/install` refuses to run while `IM_AWES_bench` is developed from a local
+checkout, since restoring the manifest would undo that. Run `bin/free` first in that
+case (and `bin/dev` again afterwards).
 
 To switch `IM_AWES_bench` to the local sibling checkout `../IM_AWES_bench`:
 

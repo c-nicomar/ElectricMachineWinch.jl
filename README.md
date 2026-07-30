@@ -23,11 +23,15 @@ The design rule behind the package is that **KiteModels owns the mechanical stat
 
 ## Quickstart
 
-The package targets Julia 1.12. `IM_AWES_bench` is unregistered and resolved from the git URL in `[sources]`, so a plain checkout needs no manual setup:
+The package targets Julia 1.12. `IM_AWES_bench` is unregistered and resolved from the git URL in `[sources]`, so a fresh checkout needs no manual configuration — just run the setup script once:
 
 ```bash
-julia --project -e 'using Pkg; Pkg.instantiate()'
+git clone https://github.com/c-nicomar/ElectricMachineWinch.jl
+cd ElectricMachineWinch.jl
+bin/install
 ```
+
+`bin/install` checks that Julia 1.12 is active, restores the reference manifest, and instantiates and precompiles the root, `test` and `examples` projects.
 
 ```julia
 using ElectricMachineWinch

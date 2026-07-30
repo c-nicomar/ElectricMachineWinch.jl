@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# Set up the Julia environment of this workspace:
+#   - verify that Julia 1.12 is the active version
+#   - restore the default manifest (Manifest-v1.12.toml)
+#   - remove stale per-project Manifest.toml files
+#   - instantiate the workspace and precompile the test and examples projects
+
+set -eu
+
+if [[ $(basename "$(pwd)") == "bin" ]]; then
+    cd ..
+fi
+
+export KMP_DUPLICATE_LIB_OK="TRUE"
+
+# --- check Julia 1.12 ---------------------------------------------------------
+if ! command -v julia >/dev/null 2>&1; then
+    echo "ERROR: julia not found in PATH." >&2
+    echo "Install Julia 1.12, e.g. with juliaup:  juliaup add 1.12 && juliaup default 1.12" >&2
+    exit 1
+fi
+
+julia_version=$(julia --version | grep -o '[0-9][0-9.]*')
+if [[ $julia_version != 1.12.* ]]; then
+    echo "ERROR: Julia 1.12 is required, but the active version is $julia_version." >&2
+    echo "Switch versions, e.g. with juliaup:  juliaup add 1.12 && juliaup default 1.12" >&2
+    exit 1
+fi
+echo "Using Julia $julia_version"
+
+# --- refuse to run on a bin/dev'd checkout ------------------------------------
+# Restoring the default manifest below would silently drop a local
+# `Pkg.develop` of IM_AWES_bench while leaving Project.toml pointing nowhere.
+dev_sources=$(awk '
+    /^\[sources\]/ { in_sources = 1 }
+    /^\[/ && !/^\[sources\]/ { in_sources = 0 }
+    in_sources && /^#[[:space:]]*IM_AWES_bench[[:space:]]*=/ { found = 1 }
+    END { print found + 0 }
+' Project.toml)
+
+dev_manifest=0
+for manifest in Manifest-v1.12.toml Manifest.toml; do
+    [[ -f $manifest ]] || continue
+    if awk '
+        /^\[\[deps\.IM_AWES_bench\]\]/ { in_pkg = 1; next }
+        /^\[\[/ { in_pkg = 0 }
+        in_pkg && /^path[[:space:]]*=/ { found = 1 }
+        END { exit !found }
+    ' "$manifest"; then
+        dev_manifest=1
+    fi
+done
+
+if [[ $dev_sources == 1 || $dev_manifest == 1 ]]; then
+    echo "ERROR: IM_AWES_bench is currently developed from a local checkout." >&2
+    echo "bin/install would overwrite the manifest and undo that." >&2
+    echo "Run bin/free first, then bin/install (and bin/dev again afterwards if needed)." >&2
+    exit 1
+fi
+
+# --- restore the default manifest ---------------------------------------------
+if [[ ! -f Manifest-v1.12.toml.default ]]; then
+    echo "ERROR: Manifest-v1.12.toml.default not found in $(pwd)." >&2
+    exit 1
+fi
+cp Manifest-v1.12.toml.default Manifest-v1.12.toml
+echo "Copied Manifest-v1.12.toml.default -> Manifest-v1.12.toml"
+
+# --- drop stale manifests -----------------------------------------------------
+# A Manifest.toml in a workspace sub-project shadows the shared, version-specific
+# manifest of the root project and breaks the workspace resolution.
+for manifest in Manifest.toml test/Manifest.toml examples/Manifest.toml; do
+    if [[ -f $manifest ]]; then
+        rm -f "$manifest"
+        echo "Removed $manifest"
+    fi
+done
+
+# --- instantiate and precompile -----------------------------------------------
+echo "Instantiating the workspace ..."
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+echo "Precompiling the test project ..."
+julia --project=test -e 'using Pkg; Pkg.precompile()'
+
+echo "Precompiling the examples project (this can take a while) ..."
+julia --project=examples -e 'using Pkg; Pkg.precompile()'
+
+echo "Done. Start a REPL with bin/run_julia"

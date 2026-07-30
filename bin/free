@@ -5,9 +5,13 @@
 #   bin/free
 #
 # Uncomments the "IM_AWES_bench = {url = ..., rev = ...}" line under
-# [sources] in Project.toml, then Pkg.free's IM_AWES_bench (dropping the
-# local develop path) and resolves against that source again. Counterpart
-# to bin/dev.
+# [sources] in Project.toml and re-resolves, which drops the local develop
+# path from the manifest in favour of that source. Counterpart to bin/dev.
+#
+# Note: no Pkg.free here. IM_AWES_bench is unregistered, and Pkg.free
+# errors out on a path-tracked package that has nothing to free *to*
+# ("unable to free unregistered package"). It would also delete the
+# [sources] entry we just restored. Pkg.resolve alone does the switch.
 #
 # Works whether called from the repo root or from bin/.
 
@@ -24,4 +28,4 @@ awk '
     { print }
 ' Project.toml > Project.toml.tmp && mv Project.toml.tmp Project.toml
 
-julia --project -e 'using Pkg; Pkg.free("IM_AWES_bench"); Pkg.resolve()'
+julia --project -e 'using Pkg; Pkg.resolve()'
