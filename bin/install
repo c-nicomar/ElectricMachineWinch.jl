@@ -31,11 +31,11 @@ echo "Using Julia $julia_version"
 
 # --- refuse to run on a bin/dev'd checkout ------------------------------------
 # Restoring the default manifest below would silently drop a local
-# `Pkg.develop` of IM_AWES_bench while leaving Project.toml pointing nowhere.
+# `Pkg.develop` of InductionMachineDrives while leaving Project.toml pointing nowhere.
 dev_sources=$(awk '
     /^\[sources\]/ { in_sources = 1 }
     /^\[/ && !/^\[sources\]/ { in_sources = 0 }
-    in_sources && /^#[[:space:]]*IM_AWES_bench[[:space:]]*=/ { found = 1 }
+    in_sources && /^#[[:space:]]*InductionMachineDrives[[:space:]]*=/ { found = 1 }
     END { print found + 0 }
 ' Project.toml)
 
@@ -43,7 +43,7 @@ dev_manifest=0
 for manifest in Manifest-v1.12.toml Manifest.toml; do
     [[ -f $manifest ]] || continue
     if awk '
-        /^\[\[deps\.IM_AWES_bench\]\]/ { in_pkg = 1; next }
+        /^\[\[deps\.InductionMachineDrives\]\]/ { in_pkg = 1; next }
         /^\[\[/ { in_pkg = 0 }
         in_pkg && /^path[[:space:]]*=/ { found = 1 }
         END { exit !found }
@@ -53,7 +53,7 @@ for manifest in Manifest-v1.12.toml Manifest.toml; do
 done
 
 if [[ $dev_sources == 1 || $dev_manifest == 1 ]]; then
-    echo "ERROR: IM_AWES_bench is currently developed from a local checkout." >&2
+    echo "ERROR: InductionMachineDrives is currently developed from a local checkout." >&2
     echo "bin/install would overwrite the manifest and undo that." >&2
     echo "Run bin/free first, then bin/install (and bin/dev again afterwards if needed)." >&2
     exit 1

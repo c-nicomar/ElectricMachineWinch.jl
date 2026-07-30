@@ -29,9 +29,9 @@ Main entry points:
 module ElectricMachineWinch
 
 using WinchModels
-using IM_AWES_bench
+using InductionMachineDrives
 
-const IMB = IM_AWES_bench
+const IMB = InductionMachineDrives
 
 export DetailedIMWinch
 export InductionMachinePlant

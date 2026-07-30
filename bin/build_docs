@@ -7,9 +7,9 @@
 # instantiate is cheap to repeat. Its Manifest.toml is gitignored.
 #
 # Because docs/ is outside the workspace, it does not inherit the root
-# [sources] entry for the unregistered IM_AWES_bench either -- docs/Project.toml
+# [sources] entry for the unregistered InductionMachineDrives either -- docs/Project.toml
 # repeats it. Note that it repeats the *git URL* version: after bin/dev the root
-# project resolves IM_AWES_bench from ../IM_AWES_bench while the docs build
+# project resolves InductionMachineDrives from ../InductionMachineDrives while the docs build
 # still uses the pinned rev. If you are editing both packages, run bin/free
 # first, or Pkg.develop it in the docs environment too.
 

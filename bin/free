@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# Switch IM_AWES_bench back from a local `Pkg.develop` to the [sources] git URL.
+# Switch InductionMachineDrives back from a local `Pkg.develop` to the [sources] git URL.
 #
 #   bin/free
 #
-# Uncomments the "IM_AWES_bench = {url = ..., rev = ...}" line under
+# Uncomments the "InductionMachineDrives = {url = ..., rev = ...}" line under
 # [sources] in Project.toml and re-resolves, which drops the local develop
 # path from the manifest in favour of that source. Counterpart to bin/dev.
 #
-# Note: no Pkg.free here. IM_AWES_bench is unregistered, and Pkg.free
+# Note: no Pkg.free here. InductionMachineDrives is unregistered, and Pkg.free
 # errors out on a path-tracked package that has nothing to free *to*
 # ("unable to free unregistered package"). It would also delete the
 # [sources] entry we just restored. Pkg.resolve alone does the switch.
@@ -24,7 +24,7 @@ fi
 awk '
     /^\[sources\]/ { in_sources = 1 }
     /^\[/ && !/^\[sources\]/ { in_sources = 0 }
-    in_sources && /^#[[:space:]]*IM_AWES_bench[[:space:]]*=/ { sub(/^#[[:space:]]*/, ""); print; next }
+    in_sources && /^#[[:space:]]*InductionMachineDrives[[:space:]]*=/ { sub(/^#[[:space:]]*/, ""); print; next }
     { print }
 ' Project.toml > Project.toml.tmp && mv Project.toml.tmp Project.toml
 

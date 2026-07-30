@@ -19,7 +19,7 @@ workflow and two `bin/` helpers. Touches `src/` only to add docstrings and one
 export, and `README.md` only to add badges and re-point links. No numerical
 behaviour changes.
 
-The sister project `../IM_AWES_bench/PlanDocu.md` is the model for this plan and has
+The sister project `../InductionMachineDrives/PlanDocu.md` is the model for this plan and has
 already been executed there — reuse its `docs/make.jl`, `bin/build_docs`,
 `bin/serve_docs` and `.github/workflows/Documenter.yml` as starting points. Section 9
 below lists where this repository genuinely differs; do not assume the two are
@@ -42,12 +42,12 @@ Re-check if the code moves under you.
   does not.
 - The root project declares `[workspace] projects = ["examples", "test"]`. Both
   members carry `[sources] ElectricMachineWinch = {path = ".."}`.
-- **`IM_AWES_bench` is unregistered** and is resolved from
-  `[sources] IM_AWES_bench = {url = "https://github.com/c-nicomar/IM_AWES_bench.jl", rev = "main"}`
+- **`InductionMachineDrives` is unregistered** and is resolved from
+  `[sources] InductionMachineDrives = {url = "https://github.com/c-nicomar/InductionMachineDrives.jl", rev = "main"}`
   in the *root* `Project.toml`. This single fact drives §2.2 — it is the main way
   this repository differs from the sister project.
 - `bin/dev` and `bin/free` rewrite that `[sources]` line to switch between the git
-  URL and a local `../IM_AWES_bench` checkout. There is **no `bin/install`** here
+  URL and a local `../InductionMachineDrives` checkout. There is **no `bin/install`** here
   (unlike the sister project), so `Manifest-v1.12.toml.default` is a manual
   convenience only; nothing restores it automatically. It is currently byte-identical
   to the working `Manifest-v1.12.toml`, which is gitignored.
@@ -115,7 +115,7 @@ Instead `docs/` gets a standalone `Project.toml`, like `test/` and `examples/` b
 outside the workspace. Its `docs/Manifest.toml` resolves independently and is already
 covered by the `Manifest.toml` line in `.gitignore`.
 
-### 2.2 The docs environment must repeat the `IM_AWES_bench` source entry
+### 2.2 The docs environment must repeat the `InductionMachineDrives` source entry
 
 This is the trap specific to this repository. Pkg honours `[sources]` **only in the
 active project and its workspace members**. `docs/` is deliberately neither. So a
@@ -127,17 +127,17 @@ ElectricMachineWinch = {path = ".."}
 ```
 
 resolves `ElectricMachineWinch`, then fails on its unregistered dependency
-`IM_AWES_bench`. The root project's git-URL entry is *not* inherited.
+`InductionMachineDrives`. The root project's git-URL entry is *not* inherited.
 
-The fix is to declare `IM_AWES_bench` in the docs environment as well — both in
+The fix is to declare `InductionMachineDrives` in the docs environment as well — both in
 `[deps]` and in `[sources]` — even though `make.jl` never loads it directly. See
 Step 1 for the file, and verify it by instantiating from a clean `docs/` (no
 `Manifest.toml` present).
 
-Corollary for `bin/dev` users: after `bin/dev` the root resolves `IM_AWES_bench` from
-`../IM_AWES_bench`, but the docs environment still resolves the pinned git `rev`.
+Corollary for `bin/dev` users: after `bin/dev` the root resolves `InductionMachineDrives` from
+`../InductionMachineDrives`, but the docs environment still resolves the pinned git `rev`.
 Docstrings and behaviour then come from two different versions. If you are actively
-changing both packages, `Pkg.develop(path="../IM_AWES_bench")` in the docs
+changing both packages, `Pkg.develop(path="../InductionMachineDrives")` in the docs
 environment too, or run `bin/free` before building docs.
 
 ### 2.3 No package extension — `make.jl` stays trivial
@@ -182,8 +182,8 @@ do is deploy previews for pull requests from forks, which is acceptable here.
   workflows/
     Documenter.yml          # new
 bin/
-  build_docs                # new  (adapt ../IM_AWES_bench/bin/build_docs)
-  serve_docs                # new  (adapt ../IM_AWES_bench/bin/serve_docs)
+  build_docs                # new  (adapt ../InductionMachineDrives/bin/build_docs)
+  serve_docs                # new  (adapt ../InductionMachineDrives/bin/serve_docs)
 docs/
   .gitignore                # new: build/, Manifest.toml
   Project.toml              # new
@@ -216,19 +216,19 @@ the strict `checkdocs` of Step 4 safe.
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 ElectricMachineWinch = "0c7c3992-6b03-4dd7-9ce6-b78056c4dd77"
-IM_AWES_bench = "d85c8359-f9b8-4611-8006-e67b7a824205"
+InductionMachineDrives = "d85c8359-f9b8-4611-8006-e67b7a824205"
 WinchModels = "7dcfa46b-7979-4771-bbf4-0aee0da42e1f"
 
 [sources]
 ElectricMachineWinch = {path = ".."}
-IM_AWES_bench = {url = "https://github.com/c-nicomar/IM_AWES_bench.jl", rev = "main"}
+InductionMachineDrives = {url = "https://github.com/c-nicomar/InductionMachineDrives.jl", rev = "main"}
 
 [compat]
 Documenter = "1"
 julia = "1.12"
 ```
 
-`IM_AWES_bench` appears in `[deps]` only so its `[sources]` entry is unambiguous —
+`InductionMachineDrives` appears in `[deps]` only so its `[sources]` entry is unambiguous —
 `make.jl` never loads it directly (§2.2).
 
 `docs/.gitignore`:
@@ -279,7 +279,7 @@ grep -n '](\(\.\./\|src/\|bin/\|test/\|examples/\|docs/\|data/\)' docs/src/*.md
 Landing page. Content, in order:
 
 1. One-paragraph purpose: a bridge package exposing
-   `DetailedIMWinch <: WinchModels.AbstractWinchModel` backed by `IM_AWES_bench`
+   `DetailedIMWinch <: WinchModels.AbstractWinchModel` backed by `InductionMachineDrives`
    drive blocks.
 2. The layering rule, which is the package's whole reason to exist — **KiteModels
    owns the mechanical state, this package owns only the electrical state**, hence
@@ -409,7 +409,7 @@ directory prefix, a bare basename is a suffix match and is needlessly ambiguous.
 documents `WinchModels.calc_acceleration`, a binding owned by another package.
 Julia stores it in `Docs.meta(ElectricMachineWinch)` (measured, §1), and the
 sister project's build shows `@autodocs` publishing exactly this kind of
-foreign-binding docstring — its extension documents `IM_AWES_bench.*` names and the
+foreign-binding docstring — its extension documents `InductionMachineDrives.*` names and the
 build is strict-clean. So the `Pages = ["winch_interface.jl"]` block above is
 expected to pick it up. Confirm it on the first build: search the generated
 `docs/build/api/winch.html` for `calc_acceleration`. If it is missing, splice it
@@ -443,7 +443,7 @@ julia --project=docs docs/make.jl     # output in docs/build/, open index.html
 
 `deploydocs` is a no-op outside CI, so this is safe.
 
-Copy `bin/build_docs` and `bin/serve_docs` from `../IM_AWES_bench/bin/` and adapt:
+Copy `bin/build_docs` and `bin/serve_docs` from `../InductionMachineDrives/bin/` and adapt:
 drop the `KMP_DUPLICATE_LIB_OK` export and the `bin/sysimage.so` warnings (neither
 exists in this repository), and keep the `--startup-file=no` and the LiveServer
 bootstrap. For the docstring pass, `servedocs` needs to watch the package source
@@ -500,7 +500,7 @@ jobs:
 Points that matter:
 
 - `version: '1.12'` matches the committed manifest. `'1'` would drift.
-- The runner clones `IM_AWES_bench` from the git URL in `docs/Project.toml`
+- The runner clones `InductionMachineDrives` from the git URL in `docs/Project.toml`
   `[sources]`. That repository is public, so no token juggling is needed — but a
   moving `rev = "main"` means the docs build is not reproducible across time. If that
   ever bites, pin a commit SHA in `docs/Project.toml` only.
@@ -569,7 +569,7 @@ names exactly which of the repo/branch/token/event checks failed.
 
 | Pitfall | Symptom | Avoidance |
 | --- | --- | --- |
-| `docs/Project.toml` without the `IM_AWES_bench` `[sources]` entry | `Pkg.instantiate()` fails: `IM_AWES_bench` not found in a registry | Repeat the git-URL entry in the docs env (§2.2) |
+| `docs/Project.toml` without the `InductionMachineDrives` `[sources]` entry | `Pkg.instantiate()` fails: `InductionMachineDrives` not found in a registry | Repeat the git-URL entry in the docs env (§2.2) |
 | Building docs after `bin/dev` | Docs describe the pinned git `rev`, not the local checkout you are editing | `Pkg.develop` it in `docs/` too, or `bin/free` first |
 | Adding Documenter to the root `Project.toml` | A bridge package gains a docs dependency | Documenter only in `docs/Project.toml` |
 | Adding `"docs"` to `[workspace] projects` | Documenter enters the shared `Manifest-v1.12.toml`; the committed `.default` drifts out of date | Keep `docs/` outside the workspace (§2.1) |
@@ -612,7 +612,7 @@ names exactly which of the repo/branch/token/event checks failed.
       admin**
 - [x] `README.md` badges added, `CLAUDE.md` paths updated
 - [ ] `v0.1.0` tagged so `/stable/` exists
-- [ ] Reciprocal link added to `../IM_AWES_bench/docs/src/index.md` once `/dev/`
+- [ ] Reciprocal link added to `../InductionMachineDrives/docs/src/index.md` once `/dev/`
       is live (§9)
 
 ---
@@ -633,16 +633,16 @@ keep visible.
 
 ---
 
-## 9. How this differs from `../IM_AWES_bench/PlanDocu.md`
+## 9. How this differs from `../InductionMachineDrives/PlanDocu.md`
 
 Read that plan first; then apply these deltas.
 
-| | `IM_AWES_bench` | `ElectricMachineWinch` |
+| | `InductionMachineDrives` | `ElectricMachineWinch` |
 | --- | --- | --- |
 | Docstring coverage | 29 of 36 exports undocumented at the start — days of work | 13 of 13 documented — hours of interface polish (§1) |
 | `checkdocs` | `:exports`, coverage enforced by review | `:all` is affordable from day one |
 | Package extension | `ext/` + MTK/OrdinaryDiffEq triggers, `Base.get_extension` guard, slow builds | none; `make.jl` is a plain `using` |
-| Unregistered deps | none — the package `[deps]` is empty | `IM_AWES_bench` via a git `[sources]` entry that the docs env must repeat (§2.2) |
+| Unregistered deps | none — the package `[deps]` is empty | `InductionMachineDrives` via a git `[sources]` entry that the docs env must repeat (§2.2) |
 | Existing prose | four `docs/README_*.md` files, moved as-is | one `GETTING_STARTED.md` moved as-is, plus a 644-line `README.md` that must be split (§2.4) |
 | `bin/install` / manifest restore | exists; drives the "docs outside the workspace" argument | does not exist; the argument still holds, more weakly (§2.1) |
 | CI env vars | `KMP_DUPLICATE_LIB_OK` needed | not needed |

@@ -1,5 +1,5 @@
 # Wrapper around the constrained-MTPA speed controller implemented in
-# IM_AWES_bench.
+# InductionMachineDrives.
 #
 # Control path:
 #
@@ -18,7 +18,7 @@
     FOCSpeedMTPAController
 
 ElectricMachineWinch adapter for the discrete constrained-MTPA speed controller
-from `IM_AWES_bench`.
+from `InductionMachineDrives`.
 
 The object owns the states and parameters of:
 

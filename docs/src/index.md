@@ -15,9 +15,9 @@ DetailedIMWinch <: WinchModels.AbstractWinchModel
 
 and connects it to interchangeable electric-drive controllers built from the
 discrete induction-machine blocks of
-[`IM_AWES_bench`](https://github.com/c-nicomar/IM_AWES_bench.jl). The package
+[`InductionMachineDrives`](https://github.com/c-nicomar/InductionMachineDrives.jl). The package
 contains almost no control math of its own — the controllers here are thin
-adapters around `IM_AWES_bench` blocks.
+adapters around `InductionMachineDrives` blocks.
 
 ## The layering rule
 
@@ -96,10 +96,10 @@ ElectricMachineWinch.DetailedIMWinch
         ├── IdealTorqueController
         │
         ├── FOCSpeedF1Controller
-        │   └── IM_AWES_bench F1 outer speed/flux loop
+        │   └── InductionMachineDrives F1 outer speed/flux loop
         │
         └── FOCSpeedMTPAController
-            └── IM_AWES_bench constrained-MTPA outer speed loop
+            └── InductionMachineDrives constrained-MTPA outer speed loop
         │
         ▼
 electromagnetic torque
@@ -125,8 +125,8 @@ See [Controllers](controllers.md) for the details and the full parameter sets.
 
 ## Quickstart
 
-The package targets Julia 1.12 and depends on `IM_AWES_bench` and
-`WinchModels`. `IM_AWES_bench` is unregistered and is resolved from the git URL
+The package targets Julia 1.12 and depends on `InductionMachineDrives` and
+`WinchModels`. `InductionMachineDrives` is unregistered and is resolved from the git URL
 declared in `[sources]` in `Project.toml`, so a plain checkout needs no manual
 setup:
 

@@ -29,6 +29,7 @@ makedocs(;
         "KiteModels integration" => "integration.md",
         "Diagnostics"            => "diagnostics.md",
         "Extending"              => "extending.md",
+        "Developer guide"        => "developer_guide.md",
         "API" => [
             "Winch and interface" => "api/winch.md",
             "Controllers"         => "api/controllers.md",
