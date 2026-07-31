@@ -56,7 +56,7 @@ julia --project=test test/runtests.jl
 
 ## Documentation
 
-You can find the manual is at
+You can find the manual at
 [ElectricMachineWinch.jl](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/):
 
 - [Getting started](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/getting_started/) — setup, the standalone tests, and the KiteControllers walkthrough
