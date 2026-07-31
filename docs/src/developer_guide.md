@@ -80,6 +80,21 @@ bin/dev     # comment out the [sources] entry, Pkg.develop("../InductionMachineD
 bin/free    # restore the [sources] entry, Pkg.resolve back onto the git source
 ```
 
+`bin/dev` requires the environment variable `JULIA_PKG_DEVDIR` to be set to the
+directory holding your package checkouts — the parent of both this repo and
+`InductionMachineDrives`:
+
+```bash
+export JULIA_PKG_DEVDIR=/path/to/checkouts
+```
+
+Put that line in `~/.bashrc`, and in `~/.profile` as well if you ever invoke
+`bin/dev` from something other than an interactive shell. The script checks that
+`$JULIA_PKG_DEVDIR/InductionMachineDrives` is the very checkout it is about to
+develop and aborts with the required `export` line otherwise, so that a plain
+`Pkg.develop("InductionMachineDrives")` in another environment resolves to the same
+directory.
+
 Both scripts rewrite `Project.toml` in place, so expect that file to show up
 as modified after running them. `bin/free` does not use `Pkg.free` —
 `InductionMachineDrives` is unregistered, so there is nothing registered to free back

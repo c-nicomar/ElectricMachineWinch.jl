@@ -9,12 +9,47 @@
 # immediately clobbered by it) and dev's the sibling ../InductionMachineDrives
 # checkout into this environment.
 #
+# Requires JULIA_PKG_DEVDIR to point at the directory holding the checkouts,
+# so that a plain `Pkg.develop("InductionMachineDrives")` elsewhere picks up the
+# same checkout this script devs.
+#
 # Works whether called from the repo root or from bin/.
 
 set -euo pipefail
 
 if [[ $(basename "$(pwd)") == "bin" ]]; then
     cd ..
+fi
+
+# --- check JULIA_PKG_DEVDIR ---------------------------------------------------
+# realpath -m ... || true: a missing path must not trip `set -e` before the
+# hint below is printed.
+sibling=$(realpath -m ../InductionMachineDrives 2>/dev/null || true)
+
+if [[ -z ${JULIA_PKG_DEVDIR:-} ]]; then
+    echo "ERROR: JULIA_PKG_DEVDIR is not set." >&2
+    echo "Add this line to ~/.bashrc (and ~/.profile if bin/dev is run outside a terminal):" >&2
+    echo "    export JULIA_PKG_DEVDIR=$(dirname "$sibling")" >&2
+    echo "Then start a new shell, or run: source ~/.bashrc" >&2
+    exit 1
+fi
+
+devdir_pkg=$(realpath -m "$JULIA_PKG_DEVDIR/InductionMachineDrives" 2>/dev/null || true)
+
+if [[ ! -d $devdir_pkg ]]; then
+    echo "ERROR: $JULIA_PKG_DEVDIR/InductionMachineDrives does not exist." >&2
+    echo "JULIA_PKG_DEVDIR must point at the directory holding the package checkouts:" >&2
+    echo "    export JULIA_PKG_DEVDIR=$(dirname "$sibling")" >&2
+    exit 1
+fi
+
+if [[ $devdir_pkg != "$sibling" ]]; then
+    echo "ERROR: JULIA_PKG_DEVDIR points at a different InductionMachineDrives checkout." >&2
+    echo "    via JULIA_PKG_DEVDIR: $devdir_pkg" >&2
+    echo "    developed by bin/dev: $sibling" >&2
+    echo "Set it to the parent of this repo:" >&2
+    echo "    export JULIA_PKG_DEVDIR=$(dirname "$sibling")" >&2
+    exit 1
 fi
 
 awk '

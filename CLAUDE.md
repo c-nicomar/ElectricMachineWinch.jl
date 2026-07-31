@@ -57,6 +57,17 @@ bin/free    # restore [sources] entry + Pkg.resolve
 Both scripts rewrite `Project.toml` in place, so expect that file to show up as
 modified after running them.
 
+`bin/dev` refuses to run unless `JULIA_PKG_DEVDIR` is set and
+`$JULIA_PKG_DEVDIR/InductionMachineDrives` is the same directory as the sibling
+`../InductionMachineDrives` it develops — so that a plain
+`Pkg.develop("InductionMachineDrives")` in another environment (`docs/`, say) picks up
+that same checkout. Set it in `~/.bashrc` (and `~/.profile`, which non-interactive
+shells do read):
+
+```bash
+export JULIA_PKG_DEVDIR=/path/to/checkouts   # the parent directory of this repo
+```
+
 Documentation (Documenter.jl, deployed to GitHub Pages by
 `.github/workflows/Documenter.yml`):
 
