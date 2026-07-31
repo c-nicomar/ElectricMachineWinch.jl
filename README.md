@@ -56,8 +56,8 @@ julia --project=test test/runtests.jl
 
 ## Documentation
 
-The manual is at
-[c-nicomar.github.io/ElectricMachineWinch.jl/dev](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/):
+You can find the manual is at
+[ElectricMachineWinch.jl](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/):
 
 - [Getting started](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/getting_started/) — setup, the standalone tests, and the KiteControllers walkthrough
 - [Controllers](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/controllers/) — the three controllers and their full parameter sets
@@ -67,3 +67,9 @@ The manual is at
 - [API](https://c-nicomar.github.io/ElectricMachineWinch.jl/dev/api/winch/) — the docstrings
 
 Build it locally with `bin/build_docs`, or serve it with live reload using `bin/serve_docs`.
+
+## Related packages
+
+- [InductionMachineDrives](https://github.com/c-nicomar/InductionMachineDrives.jl)
+- [KiteModels](https://github.com/OpenSourceAWE/KiteModels.jl)
+- [KiteControllers](https://github.com/OpenSourceAWE/KiteControllers.jl)
