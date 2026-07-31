@@ -70,6 +70,6 @@ Build it locally with `bin/build_docs`, or serve it with live reload using `bin/
 
 ## Related packages
 
-- [InductionMachineDrives](https://github.com/c-nicomar/InductionMachineDrives.jl)
-- [KiteModels](https://github.com/OpenSourceAWE/KiteModels.jl)
-- [KiteControllers](https://github.com/OpenSourceAWE/KiteControllers.jl)
+- [InductionMachineDrives](https://github.com/c-nicomar/InductionMachineDrives.jl) - models and controllers for induction machines
+- [KiteModels.jl](https://github.com/OpenSourceAWE/KiteModels.jl) - fast, numeric models of kite power systems
+- [KiteControllers.jl](https://github.com/OpenSourceAWE/KiteControllers.jl) - controllers and path planners for kite power systems
